@@ -1,0 +1,136 @@
+/* ==========================================================================
+   SYNCRA Studios · estilos globales
+   Tema oscuro: negro, grises y amarillo (colores del folleto).
+   ========================================================================== */
+
+:root {
+  --bg: #0e0e0e;
+  --bg-alt: #141414;
+  --surface: #1a1a1a;
+  --surface-2: #222222;
+  --line: #2b2b2b;
+  --ink: #0e0e0e;
+  --white: #f4f4f4;
+  --text: #d9d9d9;
+  --muted: #a3a3a3;
+  --gray: #7d7d7d;
+  --yellow: #f5b800;
+  --yellow-2: #ffd24d;
+
+  --radius: 22px;
+  --radius-pill: 999px;
+  --shadow: 0 30px 60px -30px rgb(0 0 0 / 0.8);
+  --glow: 0 30px 80px -30px rgb(245 184 0 / 0.35);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --nav-h: 76px;
+  --logo-hole: var(--bg);
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-h);
+}
+
+body {
+  margin: 0;
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--yellow);
+  color: var(--ink);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 10px;
+  border: 2px solid var(--bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--yellow);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  line-height: 1.15;
+  color: var(--white);
+  font-weight: 700;
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+a {
+  color: inherit;
+}
+
+img,
+svg {
+  display: block;
+}
+
+:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  width: min(1180px, 100% - 40px);
+  margin-inline: auto;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 400;
+  padding: 10px 18px;
+  border-radius: var(--radius-pill);
+  background: var(--yellow);
+  color: var(--ink);
+  font-weight: 700;
+  transform: translateY(-200%);
+  transition: transform 0.2s;
+}
+
+.skip-link:focus {
+  transform: none;
+}

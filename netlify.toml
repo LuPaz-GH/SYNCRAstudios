@@ -5,3 +5,24 @@
 
 [build.environment]
   NODE_VERSION = "22"
+
+[functions]
+  directory = "backend/functions"
+  node_bundler = "esbuild"
+
+# La API del panel corre como función de Netlify.
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+# El panel es parte de la misma app de React.
+[[redirects]]
+  from = "/panel"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/panel/*"
+  to = "/index.html"
+  status = 200
