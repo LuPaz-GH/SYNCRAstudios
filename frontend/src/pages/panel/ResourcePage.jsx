@@ -3,6 +3,7 @@ import Icon from '../../components/common/Icon'
 import { api } from '../../services/api'
 import { fullDate, when } from '../../utils/format'
 import ItemForm from '../../components/panel/ItemForm'
+import { exportToExcel } from '../../utils/exportExcel'
 
 export default function ResourcePage({ name, config, ctx }) {
   const { isAdmin, notify, handleError } = ctx
@@ -57,7 +58,7 @@ export default function ResourcePage({ name, config, ctx }) {
 
   const onSaved = (isNew) => {
     setEditing(null)
-    notify(isNew ? `Se creó el ${config.singular}.` : 'Cambios guardados.')
+    notify(isNew ? 'Se creó correctamente.' : 'Cambios guardados.')
     load()
   }
 
@@ -75,9 +76,19 @@ export default function ResourcePage({ name, config, ctx }) {
           </p>
         </div>
         {!trash && (
-          <button className="btn btn--primary btn--sm" onClick={() => setEditing({})}>
-            <Icon name="plus" size={18} /> {config.newLabel}
-          </button>
+          <div className="pn-page__actions">
+            <button
+              className="pn-btn"
+              onClick={() => exportToExcel(name, config, visible)}
+              disabled={!visible.length}
+              title="Descarga la lista que estás viendo (con los filtros aplicados)"
+            >
+              <Icon name="download" size={18} /> Descargar Excel
+            </button>
+            <button className="btn btn--primary btn--sm" onClick={() => setEditing({})}>
+              <Icon name="plus" size={18} /> {config.newLabel}
+            </button>
+          </div>
         )}
       </header>
 

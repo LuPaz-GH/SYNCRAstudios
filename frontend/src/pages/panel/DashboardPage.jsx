@@ -17,9 +17,10 @@ export default function DashboardPage({ ctx }) {
 
   const cards = [
     { key: 'mensajes', icon: 'mail', value: counts?.mensajes_nuevos, label: 'mensajes nuevos' },
+    { key: 'agenda', icon: 'calendar', value: counts?.proximos_eventos, label: 'eventos agendados en los próximos 30 días' },
     { key: 'tareas', icon: 'check', value: counts?.mis_tareas, label: 'tareas para vos' },
     { key: 'tareas', icon: 'clock', value: counts?.tareas_abiertas, label: 'tareas abiertas del equipo' },
-    { key: 'eventos', icon: 'calendar', value: counts?.eventos, label: 'eventos publicados en la web' },
+    { key: 'eventos', icon: 'globe', value: counts?.eventos, label: 'eventos publicados en la web' },
   ]
 
   return (

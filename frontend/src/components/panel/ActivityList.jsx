@@ -1,9 +1,9 @@
 import Icon from '../common/Icon'
 import { api } from '../../services/api'
 import { fullDate, when } from '../../utils/format'
-import { ENTITY_LABELS, MESSAGE_STATUS, TASK_STATUS, ROLES, fieldLabel } from '../../utils/panelConfig'
+import { BOOKING_STATUS, ENTITY_LABELS, MESSAGE_STATUS, MODALITY, TASK_STATUS, ROLES, fieldLabel } from '../../utils/panelConfig'
 
-const VALUE_LABELS = { status: { ...MESSAGE_STATUS, ...TASK_STATUS }, role: ROLES }
+const VALUE_LABELS = { status: { ...MESSAGE_STATUS, ...TASK_STATUS, ...BOOKING_STATUS }, role: ROLES, modality: MODALITY }
 
 function showValue(key, value) {
   if (value === null || value === undefined || value === '') return '(vacío)'

@@ -64,6 +64,29 @@ CREATE TABLE IF NOT EXISTS tasks (
   deleted_by INT UNSIGNED NULL
 );
 
+-- Agenda de eventos contratados (o en consulta) por clientes. Es interna: no se muestra en la web.
+CREATE TABLE IF NOT EXISTS bookings (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  client VARCHAR(160) NOT NULL,
+  event_name VARCHAR(200) NOT NULL,
+  date DATE NOT NULL,
+  start_time TIME NULL,
+  place VARCHAR(200) NOT NULL DEFAULT '',
+  modality ENUM('presencial', 'virtual', 'hibrido') NOT NULL DEFAULT 'presencial',
+  service VARCHAR(160) NOT NULL DEFAULT '',
+  status ENUM('consulta', 'confirmado', 'realizado', 'cancelado') NOT NULL DEFAULT 'consulta',
+  contact VARCHAR(200) NOT NULL DEFAULT '',
+  assigned_to INT UNSIGNED NULL,
+  notes TEXT NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_by INT UNSIGNED NULL,
+  updated_by INT UNSIGNED NULL,
+  deleted_at DATETIME NULL,
+  deleted_by INT UNSIGNED NULL,
+  INDEX (date)
+);
+
 -- Registro de todo lo que se hace en el panel: quién, qué, cuándo y cómo estaba antes/después.
 CREATE TABLE IF NOT EXISTS audit_log (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,

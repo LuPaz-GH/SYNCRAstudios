@@ -39,7 +39,12 @@ function clean(resource, body, partial) {
         break
       case 'date':
         value = value || null
-        if (value && !/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new HttpError(400, `"${key}" no es una fecha válida.`)
+        if (field.required && !value) throw new HttpError(400, `Falta completar "${key}".`)
+        if (value &&!/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new HttpError(400, `"${key}" no es una fecha válida.`)
+        break
+      case 'time':
+        value = value ? String(value).slice(0, 5) : null
+        if (value && !/^([01]\d|2[0-3]):[0-5]\d$/.test(value)) throw new HttpError(400, `"${key}" no es una hora válida.`)
         break
       case 'enum':
         if (!field.values.includes(value)) throw new HttpError(400, `"${key}" tiene un valor no permitido.`)
@@ -110,6 +115,7 @@ export async function create(name, user, body) {
   }
   if (resource.table === 'messages' && data.notes === undefined) data.notes = ''
   if (resource.table === 'tasks' && data.description === undefined) data.description = ''
+  if (resource.table === 'bookings' && data.notes === undefined) data.notes = ''
 
   data.created_by = user.id
   data.updated_by = user.id
@@ -162,7 +168,10 @@ export async function update(name, user, id, body, action = 'editar') {
   const changedAfter = {}
   for (const [key, value] of Object.entries(data)) {
     if (key === 'password_hash') continue
-    const old = resource.fields[key].type === 'json' ? JSON.stringify(prev[key] ?? null) : prev[key]
+    const type = resource.fields[key].type
+    let old = prev[key]
+    if (type === 'json') old = JSON.stringify(old ?? null)
+    if (type === 'time' && old) old = old.slice(0, 5) // la base guarda "10:00:00"; el formulario manda "10:00"
     if (String(old ?? '') !== String(value ?? '')) {
       changedBefore[key] = prev[key]
       changedAfter[key] = resource.fields[key].type === 'json' ? JSON.parse(value) : value

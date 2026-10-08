@@ -30,6 +30,28 @@ export const RESOURCES = {
       notes: { type: 'long' },
     },
   },
+  agenda: {
+    table: 'bookings',
+    label: 'evento agendado',
+    title: 'event_name',
+    // Primero los próximos (del más cercano al más lejano), después los pasados (del más reciente).
+    // Fecha de hoy en hora argentina (UTC-3).
+    order:
+      "t.date < DATE(UTC_TIMESTAMP() - INTERVAL 3 HOUR), CASE WHEN t.date >= DATE(UTC_TIMESTAMP() - INTERVAL 3 HOUR) THEN t.date END ASC, t.date DESC, t.start_time ASC",
+    fields: {
+      event_name: { type: 'text', max: 200, required: true },
+      client: { type: 'text', max: 160, required: true },
+      date: { type: 'date', required: true },
+      start_time: { type: 'time' },
+      place: { type: 'text', max: 200 },
+      modality: { type: 'enum', values: ['presencial', 'virtual', 'hibrido'] },
+      service: { type: 'text', max: 160 },
+      status: { type: 'enum', values: ['consulta', 'confirmado', 'realizado', 'cancelado'] },
+      contact: { type: 'text', max: 200 },
+      assigned_to: { type: 'user' },
+      notes: { type: 'long' },
+    },
+  },
   tareas: {
     table: 'tasks',
     label: 'tarea',

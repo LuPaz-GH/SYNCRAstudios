@@ -4,6 +4,12 @@
 export const MESSAGE_STATUS = { nuevo: 'Nuevo', en_curso: 'En curso', respondido: 'Respondido' }
 export const TASK_STATUS = { pendiente: 'Pendiente', en_curso: 'En curso', hecha: 'Hecha' }
 export const ROLES = { admin: 'Administrador', empleado: 'Empleado' }
+export const BOOKING_STATUS = { consulta: 'En consulta', confirmado: 'Confirmado', realizado: 'Realizado', cancelado: 'Cancelado' }
+export const MODALITY = { presencial: 'Presencial', virtual: 'Virtual', hibrido: 'Híbrido' }
+
+// "sábado 15 de noviembre de 2026" a partir de "2026-11-15"
+const longDay = (value) =>
+  new Date(`${value}T00:00`).toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
 
 const options = (map) => Object.entries(map)
 
@@ -29,9 +35,51 @@ export const RESOURCES = {
       { key: 'notes', label: 'Notas internas', type: 'textarea', hint: 'Solo las ve el equipo.' },
     ],
   },
-  eventos: {
-    label: 'Eventos',
+  agenda: {
+    label: 'Agenda',
     icon: 'calendar',
+    singular: 'evento agendado',
+    newLabel: 'Agendar evento',
+    intro: 'Eventos contratados o en consulta. Es interna: no se muestra en la web. Arriba van los próximos.',
+    title: (r) => r.event_name,
+    subtitle: (r) =>
+      [
+        longDay(r.date) + (r.start_time ? ` · ${r.start_time.slice(0, 5)} h` : ''),
+        r.place,
+        MODALITY[r.modality],
+      ]
+        .filter(Boolean)
+        .join(' · '),
+    body: (r) =>
+      [
+        `Cliente: ${r.client}`,
+        r.contact && `Contacto: ${r.contact}`,
+        r.service && `Servicio: ${r.service}`,
+        r.assigned_to_name && `Responsable: ${r.assigned_to_name}`,
+        r.notes,
+      ]
+        .filter(Boolean)
+        .join('\n'),
+    badge: (r) => ({ text: BOOKING_STATUS[r.status], tone: r.status }),
+    filter: { key: 'status', label: 'Estado', options: options(BOOKING_STATUS) },
+    defaults: { status: 'confirmado', modality: 'presencial' },
+    fields: [
+      { key: 'event_name', label: 'Evento', required: true, hint: 'Ej.: Congreso Nacional de Cardiología' },
+      { key: 'client', label: 'Cliente', required: true, hint: 'Empresa, institución o persona que contrata.' },
+      { key: 'date', label: 'Fecha', type: 'date', required: true },
+      { key: 'start_time', label: 'Hora de inicio', type: 'time' },
+      { key: 'place', label: 'Lugar', hint: 'Dirección, salón o plataforma (Zoom, YouTube…)' },
+      { key: 'modality', label: 'Modalidad', type: 'select', options: options(MODALITY) },
+      { key: 'service', label: 'Servicio', hint: 'Ej.: subtitulado en vivo, transmisión por YouTube…' },
+      { key: 'status', label: 'Estado', type: 'select', options: options(BOOKING_STATUS) },
+      { key: 'contact', label: 'Contacto del cliente', hint: 'Nombre, teléfono o email de quien coordina.' },
+      { key: 'assigned_to', label: 'Responsable de SYNCRA', type: 'user' },
+      { key: 'notes', label: 'Notas', type: 'textarea' },
+    ],
+  },
+  eventos: {
+    label: 'Eventos en la web',
+    icon: 'globe',
     singular: 'evento',
     newLabel: 'Nuevo evento',
     intro: 'Lo que cargues acá aparece en la sección "Donde estuvimos presentes" de la web. El primero de la lista es el destacado.',
@@ -104,7 +152,8 @@ export const RESOURCES = {
 // Para mostrar el registro de actividad con nombres en castellano.
 export const ENTITY_LABELS = {
   mensajes: 'Mensajes',
-  eventos: 'Eventos',
+  agenda: 'Agenda',
+  eventos: 'Eventos en la web',
   tareas: 'Tareas',
   usuarios: 'Usuarios',
   sesion: 'Sesiones',

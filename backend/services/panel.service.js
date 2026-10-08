@@ -8,7 +8,9 @@ export async function summary(userId) {
       (SELECT COUNT(*) FROM events WHERE deleted_at IS NULL) AS eventos,
       (SELECT COUNT(*) FROM messages WHERE deleted_at IS NULL AND status = 'nuevo') AS mensajes_nuevos,
       (SELECT COUNT(*) FROM tasks WHERE deleted_at IS NULL AND status <> 'hecha') AS tareas_abiertas,
-      (SELECT COUNT(*) FROM tasks WHERE deleted_at IS NULL AND status <> 'hecha' AND assigned_to = ?) AS mis_tareas`,
+      (SELECT COUNT(*) FROM tasks WHERE deleted_at IS NULL AND status <> 'hecha' AND assigned_to = ?) AS mis_tareas,
+      (SELECT COUNT(*) FROM bookings WHERE deleted_at IS NULL AND status IN ('consulta', 'confirmado')
+        AND date BETWEEN DATE(UTC_TIMESTAMP() - INTERVAL 3 HOUR) AND DATE(UTC_TIMESTAMP() - INTERVAL 3 HOUR) + INTERVAL 30 DAY) AS proximos_eventos`,
     [userId],
   )
   return counts

@@ -23,7 +23,10 @@ export default function Footer() {
         <a href="/panel" className="footer__staff">
           <Icon name="lock" size={22} /> Acceso equipo
         </a>
-        <p className="footer__copy">© {new Date().getFullYear()} SYNCRA Studios · Tucumán, Argentina</p>
+        <p className="footer__copy">
+          © {new Date().getFullYear()} SYNCRA Studios · Tucumán, Argentina ·{' '}
+          <a href="/privacidad">Política de privacidad</a>
+        </p>
       </div>
     </footer>
   )

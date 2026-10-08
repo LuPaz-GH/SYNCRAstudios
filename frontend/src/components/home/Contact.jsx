@@ -101,7 +101,10 @@ export default function Contact() {
           <button type="submit" className="btn btn--primary btn--block">
             Enviar por WhatsApp <Icon name="arrow" size={20} />
           </button>
-          <p className="form__note">Se abrirá WhatsApp con tu mensaje listo para enviar.</p>
+          <p className="form__note">
+            Se abrirá WhatsApp con tu mensaje listo para enviar. Al enviarlo aceptás nuestra{' '}
+            <a href="/privacidad">política de privacidad</a>.
+          </p>
         </form>
       </div>
     </section>

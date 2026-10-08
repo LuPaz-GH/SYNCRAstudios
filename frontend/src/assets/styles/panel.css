@@ -295,6 +295,18 @@
   margin-bottom: 6px;
 }
 
+.pn-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.pn-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .pn-page__head p {
   max-width: 60ch;
   margin: 0;
@@ -535,7 +547,23 @@
   color: var(--yellow-2);
 }
 
+.pn-badge--confirmado {
+  background: var(--yellow);
+  color: var(--ink);
+}
+
+.pn-badge--consulta {
+  background: rgb(245 184 0 / 0.16);
+  color: var(--yellow-2);
+}
+
+.pn-badge--cancelado {
+  background: rgb(255 90 90 / 0.14);
+  color: #ff9c9c;
+}
+
 .pn-badge--respondido,
+.pn-badge--realizado,
 .pn-badge--hecha {
   background: rgb(120 220 150 / 0.14);
   color: #8fe0a8;

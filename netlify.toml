@@ -26,3 +26,15 @@
   from = "/panel/*"
   to = "/index.html"
   status = 200
+
+# Páginas sueltas de la web.
+[[redirects]]
+  from = "/privacidad"
+  to = "/index.html"
+  status = 200
+
+# Cualquier otra dirección: la app muestra la página 404 (va siempre última).
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 404

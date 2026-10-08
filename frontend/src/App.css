@@ -2301,6 +2301,134 @@
   }
 }
 
+/* ---------- Páginas sueltas (privacidad, 404) ---------- */
+
+.simple__header {
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-alt);
+}
+
+.simple__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: var(--nav-h);
+}
+
+.simple__bar > a:first-child {
+  text-decoration: none;
+}
+
+.simple__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--white);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.simple__back:hover {
+  color: var(--yellow);
+}
+
+.simple {
+  padding: clamp(50px, 8vw, 100px) 0 clamp(80px, 10vw, 130px);
+}
+
+.footer__copy a {
+  color: var(--white);
+  text-underline-offset: 3px;
+}
+
+.footer__copy a:hover,
+.form__note a:hover {
+  color: var(--yellow);
+}
+
+.form__note a {
+  color: var(--white);
+}
+
+/* Error 404 */
+.notfound {
+  max-width: 760px;
+  text-align: center;
+}
+
+.notfound__code {
+  margin: 0;
+  font-size: clamp(6rem, 22vw, 12rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--yellow);
+}
+
+.notfound__caption {
+  display: inline-block;
+  margin: 0 0 24px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  background: rgb(0 0 0 / 0.75);
+  border: 1px solid var(--line);
+  color: var(--white);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.notfound__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+/* Textos legales */
+.legal {
+  max-width: 780px;
+}
+
+.legal__updated {
+  color: var(--gray);
+  font-weight: 600;
+}
+
+.legal h2 {
+  margin: 44px 0 14px;
+  font-size: clamp(1.3rem, 2.4vw, 1.6rem);
+}
+
+.legal ul {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 1em;
+  padding-left: 1.3em;
+}
+
+.legal li::marker {
+  color: var(--yellow);
+}
+
+.legal strong {
+  color: var(--white);
+}
+
+.legal a {
+  color: var(--yellow);
+  font-weight: 600;
+}
+
+.legal__notice {
+  margin-top: 28px;
+  padding: 18px 20px;
+  border-left: 4px solid var(--yellow);
+  border-radius: 0 12px 12px 0;
+  background: var(--surface);
+  font-size: 0.95rem;
+}
+
 /* ---------- Barra de accesibilidad ---------- */
 
 .a11y__button {
