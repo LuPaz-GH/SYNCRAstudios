@@ -2301,6 +2301,243 @@
   }
 }
 
+/* ---------- Barra de accesibilidad ---------- */
+
+.a11y__button {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  background: var(--yellow);
+  color: var(--ink);
+  box-shadow: 0 12px 30px -8px rgb(0 0 0 / 0.6);
+  cursor: pointer;
+  transition: transform 0.25s var(--ease);
+}
+
+.a11y__button:hover {
+  transform: scale(1.06);
+}
+
+.a11y__button[aria-expanded="true"] {
+  background: var(--white);
+}
+
+.a11y__panel {
+  position: fixed;
+  left: 20px;
+  bottom: 96px;
+  z-index: 310;
+  display: grid;
+  gap: 12px;
+  width: min(330px, calc(100vw - 32px));
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface);
+  color: var(--white);
+  box-shadow: var(--shadow);
+}
+
+.a11y__title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.a11y__group {
+  display: grid;
+  gap: 8px;
+}
+
+.a11y__label,
+.a11y__toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.a11y__sizes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.a11y__size {
+  min-height: 48px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--white);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.a11y__size:nth-child(2) {
+  font-size: 1.15em;
+}
+
+.a11y__size:nth-child(3) {
+  font-size: 1.3em;
+}
+
+.a11y__size[aria-pressed="true"] {
+  border-color: var(--yellow);
+  background: var(--yellow);
+  color: var(--ink);
+}
+
+.a11y__toggle {
+  width: 100%;
+  min-height: 52px;
+  padding: 0 14px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--white);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.a11y__toggle > span:first-of-type {
+  flex: 1;
+}
+
+/* Interruptor tipo encendido/apagado */
+.a11y__switch {
+  position: relative;
+  flex: none;
+  width: 46px;
+  height: 26px;
+  border-radius: var(--radius-pill);
+  background: #444;
+  transition: background 0.2s;
+}
+
+.a11y__switch::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--white);
+  transition: transform 0.2s var(--ease);
+}
+
+.a11y__toggle[aria-checked="true"] {
+  border-color: var(--yellow);
+}
+
+.a11y__toggle[aria-checked="true"] .a11y__switch {
+  background: var(--yellow);
+}
+
+.a11y__toggle[aria-checked="true"] .a11y__switch::after {
+  transform: translateX(20px);
+  background: var(--ink);
+}
+
+.a11y__reset {
+  justify-self: start;
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  color: var(--yellow);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .a11y__button {
+    left: 16px;
+    bottom: 16px;
+    width: 62px;
+    height: 62px;
+  }
+
+  .a11y__panel {
+    left: 16px;
+    bottom: 90px;
+  }
+}
+
+/* Texto más grande: todo lo que está medido en rem crece junto */
+html[data-text-size="1"] {
+  font-size: 115%;
+}
+
+html[data-text-size="2"] {
+  font-size: 130%;
+}
+
+/* Alto contraste: textos blancos, bordes marcados y links subrayados */
+.a11y-contrast {
+  --bg: #000;
+  --bg-alt: #000;
+  --surface: #0a0a0a;
+  --surface-2: #161616;
+  --line: #8c8c8c;
+  --text: #fff;
+  --muted: #f0f0f0;
+  --gray: #d6d6d6;
+}
+
+.a11y-contrast .mw {
+  color: var(--white);
+}
+
+.a11y-contrast .mw.is-key {
+  color: var(--yellow);
+}
+
+.a11y-contrast main a:not(.btn),
+.a11y-contrast footer a:not(.btn) {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Pausar animaciones: igual que cuando el sistema pide reducir el movimiento */
+html.a11y-still {
+  scroll-behavior: auto;
+}
+
+.a11y-still *,
+.a11y-still *::before,
+.a11y-still *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+.a11y-still [data-reveal],
+.a11y-still .word > span,
+.a11y-still .hero__copy > :not(h1),
+.a11y-still .hero__demo {
+  opacity: 1;
+  transform: none;
+}
+
+.a11y-still .marquee__track,
+.a11y-still .bigtext__track,
+.a11y-still .wa-float {
+  animation: none;
+}
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 960px) {

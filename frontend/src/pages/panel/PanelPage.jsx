@@ -22,6 +22,11 @@ export default function PanelPage() {
 
   useEffect(() => {
     document.title = 'Panel | SYNCRA Studios'
+    // El panel es privado: que los buscadores no lo indexen.
+    const robots = document.createElement('meta')
+    robots.name = 'robots'
+    robots.content = 'noindex, nofollow'
+    document.head.append(robots)
     document.documentElement.classList.add('is-loaded', 'is-panel')
     api('/auth/me')
       .then((data) => setUser(data.user))

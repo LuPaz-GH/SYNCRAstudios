@@ -1,14 +1,15 @@
 import { useEffect, useRef } from 'react'
+import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion'
 
 // Anillo amarillo que sigue al mouse con un pequeño retraso. Solo en computadoras con mouse;
 // el cursor normal se mantiene visible para no perder usabilidad.
 export default function Cursor() {
   const ringRef = useRef(null)
   const dotRef = useRef(null)
+  const reduced = usePrefersReducedMotion()
 
   useEffect(() => {
     const fine = window.matchMedia('(pointer: fine)').matches
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (!fine || reduced) return
 
     const root = document.documentElement
@@ -42,7 +43,7 @@ export default function Cursor() {
       window.removeEventListener('pointermove', onMove)
       root.classList.remove('has-cursor')
     }
-  }, [])
+  }, [reduced])
 
   return (
     <>

@@ -1,12 +1,14 @@
 import { useEffect } from 'react'
+import usePrefersReducedMotion from './usePrefersReducedMotion'
 
 // Efectos que reaccionan al mouse y al scroll:
 // - [data-spot]: luz amarilla que sigue al mouse dentro del elemento.
 // - [data-tilt]: inclinación 3D según la posición del mouse.
 // - [data-parallax="0.2"]: el elemento se desplaza a otra velocidad al hacer scroll.
 export default function useInteractions() {
+  const reduced = usePrefersReducedMotion()
+
   useEffect(() => {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const cleanups = []
 
     // Un solo listener para toda la página: así también funciona en tarjetas que aparecen después.
@@ -54,6 +56,10 @@ export default function useInteractions() {
       })
     }
 
-    return () => cleanups.forEach((fn) => fn())
-  }, [])
+    return () => {
+      cleanups.forEach((fn) => fn())
+      if (current) reset(current)
+      document.querySelectorAll('[data-parallax]').forEach((el) => (el.style.transform = ''))
+    }
+  }, [reduced])
 }

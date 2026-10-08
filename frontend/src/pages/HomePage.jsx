@@ -15,6 +15,7 @@ import Values from '../components/home/Values'
 import Commitment from '../components/home/Commitment'
 import Footer from '../components/layout/Footer'
 import WhatsAppButton from '../components/common/WhatsAppButton'
+import AccessibilityMenu from '../components/common/AccessibilityMenu'
 
 export default function HomePage() {
   useReveal()
@@ -44,6 +45,7 @@ export default function HomePage() {
       </main>
       <Footer />
       <WhatsAppButton />
+      <AccessibilityMenu />
     </>
   )
 }

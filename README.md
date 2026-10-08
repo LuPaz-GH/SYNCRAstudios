@@ -57,6 +57,8 @@ Contamos con un equipo de **estenotipistas profesionales** que garantizan fideli
 - 🎥 **Videos de eventos** que se pueden agrandar, pausar y silenciar
 - 📲 **Formulario que envía el mensaje por WhatsApp** (y lo guarda en el panel)
 - 📱 **100% responsive**: se ve bien en celular, tablet y compu
+- 💬 **Botón flotante de WhatsApp**
+- 🔗 **Vista previa al compartir** el link (imagen y descripción)
 
 ---
 
@@ -68,6 +70,7 @@ Porque somos una empresa de accesibilidad, la página también lo es 💪
 - ⌨️ Se puede navegar **solo con teclado**
 - 🔊 Compatible con **lectores de pantalla**
 - ⏸️ Todos los videos se pueden **pausar y silenciar**
+- ♿ **Barra de accesibilidad**: letra más grande, alto contraste y pausar animaciones (se recuerda para la próxima visita)
 
 ---
 

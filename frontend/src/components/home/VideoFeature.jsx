@@ -15,6 +15,13 @@ export default function VideoFeature({ src, label }) {
   const [expanded, setExpanded] = useState(false)
   const userPaused = useRef(reduced)
 
+  // Si se activa "Pausar animaciones", el video se frena (se puede seguir viendo con el botón de play).
+  useEffect(() => {
+    if (!reduced) return
+    userPaused.current = true
+    videoRef.current?.pause()
+  }, [reduced])
+
   useEffect(() => {
     const video = videoRef.current
     const observer = new IntersectionObserver(
