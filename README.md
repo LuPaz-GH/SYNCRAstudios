@@ -96,6 +96,8 @@ npm run dev
 | `npm run preview` | 👀 Muestra la versión final antes de publicarla |
 | `npm run api` | 🔐 Levanta solo la API del panel (opcional: `npm run dev` ya la incluye) |
 | `npm run db:setup` | 🐬 Crea la base de datos y el administrador |
+| `npm run db:setup:cloud` | ☁️ Lo mismo, en la base online (TiDB) |
+| `npm run user:password` | 🔑 Llave de emergencia: cambia la contraseña de un usuario (`:cloud` para la base online) |
 
 ---
 

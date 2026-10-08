@@ -8,7 +8,10 @@
     "api": "node --env-file-if-exists=.env --watch backend/index.js",
     "db:setup": "node --env-file-if-exists=.env backend/scripts/setup.js",
     "build": "vite build frontend",
-    "preview": "vite preview frontend"
+    "preview": "vite preview frontend",
+    "db:setup:cloud": "node --env-file=.env.cloud backend/scripts/setup.js",
+    "user:password": "node --env-file-if-exists=.env backend/scripts/reset-password.js",
+    "user:password:cloud": "node --env-file=.env.cloud backend/scripts/reset-password.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

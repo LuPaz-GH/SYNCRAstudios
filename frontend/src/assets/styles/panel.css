@@ -59,6 +59,40 @@
   color: var(--yellow);
 }
 
+.pn-login__forgot {
+  justify-self: start;
+  margin-top: -8px;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: var(--yellow);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.pn-login__help {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg);
+}
+
+.pn-login__help p {
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.pn-login__help strong {
+  color: var(--white);
+}
+
 /* ---------- Campos ---------- */
 
 .pn-field {
