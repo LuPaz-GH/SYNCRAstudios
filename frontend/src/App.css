@@ -2337,12 +2337,26 @@
   padding: clamp(50px, 8vw, 100px) 0 clamp(80px, 10vw, 130px);
 }
 
-.footer__copy a {
-  color: var(--white);
-  text-underline-offset: 3px;
+/* Renglón final del pie: copyright y política de privacidad.
+   El espacio de abajo evita que los botones flotantes (accesibilidad y WhatsApp) tapen el contenido. */
+.footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  margin-top: 24px;
+  padding-bottom: 90px;
 }
 
-.footer__copy a:hover,
+.footer__legal {
+  color: var(--white);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-underline-offset: 4px;
+}
+
+.footer__legal:hover,
 .form__note a:hover {
   color: var(--yellow);
 }
