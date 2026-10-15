@@ -82,7 +82,7 @@ export const RESOURCES = {
     icon: 'globe',
     singular: 'evento',
     newLabel: 'Nuevo evento',
-    intro: 'Lo que cargues acá aparece en la sección "Donde estuvimos presentes" de la web. El primero de la lista es el destacado.',
+    intro: 'Lo que cargues acá aparece en la sección "Donde estuvimos presentes" de la web, en este mismo orden, con sus fotos y videos en grande.',
     title: (r) => r.name,
     subtitle: (r) => [r.kind, r.date, r.place].filter(Boolean).join(' · '),
     body: (r) => r.text,
