@@ -1,7 +1,7 @@
 import { HttpError } from './HttpError.js'
 
 // Fotos, videos y publicaciones de Instagram de un evento.
-// Cada uno es { type: 'video' | 'image' | 'instagram', src, label }.
+// Cada uno es { type: 'video' | 'image' | 'instagram', src, label }; los de Instagram pueden tener "cover" (portada).
 // Los eventos viejos no tienen "type": son videos.
 
 const MAX_ITEMS = 30
@@ -37,9 +37,13 @@ export function cleanMedia(value) {
     if (type === 'instagram') {
       src = instagramUrl(src)
       if (!src) throw new HttpError(400, 'Hay un link de Instagram que no es de una publicación o reel.')
-    } else if (!isOwnFile(src)) {
-      throw new HttpError(400, `"${src.slice(0, 60)}" no es un archivo válido.`)
+      // Portada opcional: una foto subida desde el panel que se muestra como miniatura.
+      const cover = String(item?.cover || '').trim()
+      if (!cover) return { type, src, label }
+      if (!isOwnFile(cover)) throw new HttpError(400, 'La portada de Instagram no es un archivo válido.')
+      return { type, src, label, cover }
     }
+    if (!isOwnFile(src)) throw new HttpError(400, `"${src.slice(0, 60)}" no es un archivo válido.`)
     return { type, src, label }
   })
   return list.length ? list : null

@@ -109,8 +109,18 @@ function Viewer({ items, index, onMove, onClose }) {
   )
 }
 
-// Miniatura de cada cosa: la foto, el primer cuadro del video o el logo de Instagram.
+// Miniatura de cada cosa: la foto, el primer cuadro del video, o la portada (o el logo) de Instagram.
 function Tile({ item, compact }) {
+  if (item.type === 'instagram' && item.cover) {
+    return (
+      <>
+        <img src={imageUrl(item.cover, compact ? 400 : 700)} alt="" loading="lazy" />
+        <span className="gallery__badge" aria-hidden="true">
+          <Icon name="instagram" size={compact ? 16 : 20} />
+        </span>
+      </>
+    )
+  }
   if (item.type === 'instagram') {
     return (
       <span className="gallery__ig" aria-hidden="true">

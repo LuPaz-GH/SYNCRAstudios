@@ -1688,6 +1688,25 @@
   transform: scale(1.05);
 }
 
+/* Logo chiquito de Instagram sobre la portada */
+.gallery__badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  padding: 6px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #f9a03f, #e1306c 50%, #833ab4);
+  color: #fff;
+}
+
+.gallery--compact .gallery__badge {
+  top: 5px;
+  right: 5px;
+  padding: 4px;
+}
+
 /* Publicación de Instagram en la vista ampliada */
 .lightbox__insta {
   display: block;

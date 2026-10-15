@@ -8,6 +8,7 @@ const TYPE_LABELS = { image: 'Foto', video: 'Video', instagram: 'Instagram' }
 function Thumb({ item }) {
   if (item.type === 'image') return <img src={imageUrl(item.src, 160)} alt="" loading="lazy" />
   if (item.type === 'video') return <video src={item.src} preload="metadata" muted playsInline />
+  if (item.cover) return <img src={imageUrl(item.cover, 160)} alt="" loading="lazy" />
   return <Icon name="instagram" />
 }
 
@@ -15,6 +16,8 @@ function Thumb({ item }) {
 // "onChange" recibe una función (lista anterior → lista nueva), porque las subidas terminan de a una.
 export default function MediaField({ value, onChange, onBusyChange, ctx }) {
   const fileInput = useRef(null)
+  const coverInput = useRef(null)
+  const coverFor = useRef(null) // link de Instagram al que se le está eligiendo portada
   const pendingCount = useRef(0)
   const [uploads, setUploads] = useState([])
   const [link, setLink] = useState('')
@@ -30,10 +33,8 @@ export default function MediaField({ value, onChange, onBusyChange, ctx }) {
       return next
     })
 
-  const onFiles = async (e) => {
-    const files = [...e.target.files]
-    e.target.value = ''
-    if (!files.length) return
+  // Sube los archivos de a uno, mostrando el avance. "onUploaded" recibe cada archivo ya subido.
+  const uploadAll = async (files, onUploaded) => {
     setError('')
     const pending = files.map((file, i) => ({ id: `${Date.now()}-${i}`, name: file.name, progress: 0 }))
     setUploads((list) => [...list, ...pending])
@@ -47,7 +48,7 @@ export default function MediaField({ value, onChange, onBusyChange, ctx }) {
         const item = await uploadFile(file, (progress) =>
           setUploads((list) => list.map((u) => (u.id === id ? { ...u, progress } : u))),
         )
-        onChange((list) => [...list, item])
+        onUploaded(item)
       } catch (err) {
         if (err.status === 401) ctx.handleError(err)
         errors.push(err.message)
@@ -58,6 +59,29 @@ export default function MediaField({ value, onChange, onBusyChange, ctx }) {
     // Mientras quede algo subiendo (por ejemplo, otra tanda), no se puede guardar.
     if (!pendingCount.current) onBusyChange(false)
     setError(errors.join(' '))
+  }
+
+  const onFiles = (e) => {
+    const files = [...e.target.files]
+    e.target.value = ''
+    if (files.length) uploadAll(files, (item) => onChange((list) => [...list, item]))
+  }
+
+  const chooseCover = (src) => {
+    coverFor.current = src
+    coverInput.current.click()
+  }
+
+  const onCover = (e) => {
+    const [file] = e.target.files
+    e.target.value = ''
+    if (!file) return
+    if (!file.type.startsWith('image/')) {
+      setError('La portada tiene que ser una foto (por ejemplo, una captura del video).')
+      return
+    }
+    const src = coverFor.current
+    uploadAll([file], (cover) => onChange((list) => list.map((item) => (item.src === src ? { ...item, cover: cover.src } : item))))
   }
 
   const addLink = (value = link) => {
@@ -106,6 +130,11 @@ export default function MediaField({ value, onChange, onBusyChange, ctx }) {
                   aria-label={`Título de ${TYPE_LABELS[item.type].toLowerCase()} ${i + 1}`}
                   maxLength={80}
                 />
+                {item.type === 'instagram' && (
+                  <button type="button" className="pn-link pn-media__cover" onClick={() => chooseCover(item.src)}>
+                    <Icon name="image" size={16} /> {item.cover ? 'Cambiar portada' : 'Elegir portada (una captura del video)'}
+                  </button>
+                )}
               </div>
               <div className="pn-media__actions">
                 <button type="button" className="pn-icon-btn" onClick={() => move(i, -1)} disabled={i === 0} aria-label="Subir en el orden">
@@ -146,6 +175,7 @@ export default function MediaField({ value, onChange, onBusyChange, ctx }) {
           <Icon name="upload" size={18} /> Subir fotos o videos
         </button>
         <input ref={fileInput} type="file" accept="image/*,video/*" multiple hidden onChange={onFiles} />
+        <input ref={coverInput} type="file" accept="image/*" hidden onChange={onCover} />
       </div>
 
       <div className="pn-media__link">
