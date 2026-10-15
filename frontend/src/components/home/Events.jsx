@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 import Icon from '../common/Icon'
 import RevealText from '../common/RevealText'
-import VideoFeature from './VideoFeature'
-import EventGallery from './EventGallery'
+import EventMedia from './EventMedia'
 import { EVENTS } from '../../assets/data/events'
 import { getPublicEvents } from '../../services/public.service'
 import { normalizeMedia } from '../../utils/media'
@@ -25,32 +24,20 @@ function Meta({ event }) {
   )
 }
 
-// Los videos se muestran grandes (se reproducen solos, sin sonido); fotos e Instagram, en miniatura.
-function splitMedia(list) {
-  const media = normalizeMedia(list)
-  return {
-    videos: media.filter((item) => item.type === 'video'),
-    others: media.filter((item) => item.type !== 'video'),
-  }
-}
-
-function EventCard({ event, index }) {
-  const { videos, others } = splitMedia(event.videos)
+// Cada evento: fotos y videos grandes de un lado y el texto del otro (los lados se van alternando).
+function EventShowcase({ event, index }) {
+  const media = normalizeMedia(event.videos)
+  const classes = ['showcase', index % 2 && 'showcase--flip', !media.length && 'showcase--text'].filter(Boolean)
   return (
-    <article className="card event" data-reveal data-spot data-tilt style={{ transitionDelay: `${index * 100}ms` }}>
-      <span className="event__kind">{event.kind}</span>
-      <h4>{event.name}</h4>
-      <Meta event={event} />
-      <p>{event.text}</p>
-      {videos.length > 0 && (
-        <div className="event__videos">
-          {videos.map((video) => (
-            <VideoFeature key={video.src} src={video.src} label={video.label} />
-          ))}
-        </div>
-      )}
-      <EventGallery items={others} compact />
-    </article>
+    <div className={classes.join(' ')}>
+      {media.length > 0 && <EventMedia items={media} />}
+      <div className="showcase__text" data-reveal>
+        {event.kind && <span className="event__kind">{event.kind}</span>}
+        <h3 className="showcase__title">{event.name}</h3>
+        <Meta event={event} />
+        <p className="lead">{event.text}</p>
+      </div>
+    </div>
   )
 }
 
@@ -63,10 +50,6 @@ export default function Events() {
       .then((rows) => Array.isArray(rows) && setEvents(rows))
       .catch(() => {})
   }, [])
-
-  const [featured, ...rest] = events
-  // En el destacado, los videos van grandes al lado del texto; fotos e Instagram, en la galería de abajo.
-  const { videos: featuredVideos, others: featuredGallery } = splitMedia(featured?.videos)
 
   return (
     <section id="eventos" className="section">
@@ -82,36 +65,11 @@ export default function Events() {
           </p>
         </div>
 
-        {featured && (
-          <>
-            <div className="showcase">
-              {featuredVideos.length > 0 && (
-                <div className="showcase__videos" data-reveal>
-                  {featuredVideos.map((video) => (
-                    <VideoFeature key={video.src} src={video.src} label={video.label} />
-                  ))}
-                </div>
-              )}
-              <div className="showcase__text" data-reveal>
-                <span className="event__kind">{featured.kind}</span>
-                <h3 className="showcase__title">{featured.name}</h3>
-                <Meta event={featured} />
-                <p className="lead">{featured.text}</p>
-              </div>
-            </div>
-            {featuredGallery.length > 0 && (
-              <div className="showcase__gallery" data-reveal>
-                <EventGallery items={featuredGallery} />
-              </div>
-            )}
-          </>
-        )}
+        {events.map((event, i) => (
+          <EventShowcase key={event.id ?? event.name} event={event} index={i} />
+        ))}
 
         <div className="cards cards--3 events__grid">
-          {rest.map((event, i) => (
-            <EventCard key={event.id ?? event.name} event={event} index={i} />
-          ))}
-
           <article className="card event event--cta" data-reveal data-spot data-tilt>
             <span className="card__icon">
               <Icon name="stage" />

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import Icon from '../common/Icon'
+import VideoFeature from './VideoFeature'
 import { imageUrl, instagramEmbed } from '../../utils/media'
 
-const KIND = { image: 'foto', video: 'video', instagram: 'publicación de Instagram' }
+const KIND = { image: 'foto', instagram: 'publicación de Instagram' }
 
 // Publicación de Instagram incrustada. Instagram avisa qué alto necesita y el recuadro se ajusta.
 function InstagramPost({ item }) {
@@ -35,7 +36,7 @@ function InstagramPost({ item }) {
   )
 }
 
-// Foto, video o publicación de Instagram en grande, con flechas para pasar al anterior o al siguiente.
+// Foto o publicación de Instagram en grande, con flechas para pasar a la anterior o la siguiente.
 function Viewer({ items, index, onMove, onClose }) {
   const dialog = useRef(null)
   const item = items[index]
@@ -56,15 +57,6 @@ function Viewer({ items, index, onMove, onClose }) {
   const onKeyDown = (e) => {
     if (e.key === 'ArrowLeft') onMove(-1)
     if (e.key === 'ArrowRight') onMove(1)
-  }
-
-  let content
-  if (item.type === 'video') {
-    content = <video key={item.src} src={item.src} controls autoPlay playsInline className="lightbox__video" />
-  } else if (item.type === 'instagram') {
-    content = <InstagramPost key={item.src} item={item} />
-  } else {
-    content = <img key={item.src} src={imageUrl(item.src, 2000)} alt={item.label || ''} className="lightbox__video" />
   }
 
   return createPortal(
@@ -88,7 +80,11 @@ function Viewer({ items, index, onMove, onClose }) {
             </svg>
           </button>
         </div>
-        {content}
+        {item.type === 'instagram' ? (
+          <InstagramPost key={item.src} item={item} />
+        ) : (
+          <img key={item.src} src={imageUrl(item.src, 2000)} alt={item.label || ''} className="lightbox__video" />
+        )}
         {items.length > 1 && (
           <div className="lightbox__nav">
             <button type="button" onClick={() => onMove(-1)} aria-label="Anterior">
@@ -109,68 +105,57 @@ function Viewer({ items, index, onMove, onClose }) {
   )
 }
 
-// Miniatura de cada cosa: la foto, el primer cuadro del video, o la portada (o el logo) de Instagram.
-function Tile({ item, compact }) {
-  if (item.type === 'instagram' && item.cover) {
-    return (
-      <>
-        <img src={imageUrl(item.cover, compact ? 400 : 700)} alt="" loading="lazy" />
-        <span className="gallery__badge" aria-hidden="true">
-          <Icon name="instagram" size={compact ? 16 : 20} />
+// Foto o Instagram en el mismo marco grande que los videos. Al tocarlo se ve completo.
+function Frame({ item, onOpen }) {
+  const cover = item.type === 'instagram' ? item.cover : item.src
+  return (
+    <button
+      type="button"
+      className="video video--vertical media-frame"
+      onClick={onOpen}
+      aria-label={`Ver ${KIND[item.type]}${item.label ? `: ${item.label}` : ''}`}
+      data-spot
+      data-tilt
+    >
+      {item.label && (
+        <span className="video__live">
+          <span className="live-dot" /> {item.label}
         </span>
-      </>
-    )
-  }
-  if (item.type === 'instagram') {
-    return (
-      <span className="gallery__ig" aria-hidden="true">
-        <Icon name="instagram" size={compact ? 30 : 44} />
-        {!compact && 'Ver en Instagram'}
-      </span>
-    )
-  }
-  if (item.type === 'video') {
-    return (
-      <>
-        {/* "#t=0.1" hace que el celular muestre el primer cuadro en vez de un recuadro negro */}
-        <video src={`${item.src}#t=0.1`} preload="metadata" muted playsInline tabIndex={-1} />
-        <span className="gallery__play" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <path d="M8 5v14l11-7z" />
-          </svg>
+      )}
+      {cover ? (
+        <img src={imageUrl(cover, 700)} alt="" loading="lazy" />
+      ) : (
+        <span className="media-frame__ig">
+          <Icon name="instagram" size={56} />
+          Ver en Instagram
         </span>
-      </>
-    )
-  }
-  return <img src={imageUrl(item.src, compact ? 400 : 700)} alt="" loading="lazy" />
+      )}
+      {item.type === 'instagram' && cover && (
+        <span className="media-frame__badge" aria-hidden="true">
+          <Icon name="instagram" size={20} />
+        </span>
+      )}
+    </button>
+  )
 }
 
-// Galería de un evento: todo en miniaturas del mismo tamaño, que se agrandan al tocarlas.
-export default function EventGallery({ items, compact = false }) {
+// Fotos, videos e Instagram de un evento, grandes y uno al lado del otro.
+// Si son muchos, se deslizan de costado.
+export default function EventMedia({ items }) {
   const [open, setOpen] = useState(null)
-  if (!items.length) return null
-
-  const move = (step) => setOpen((i) => (i + step + items.length) % items.length)
+  const others = items.filter((item) => item.type !== 'video')
+  const move = (step) => setOpen((i) => (i + step + others.length) % others.length)
 
   return (
-    <div className={`gallery${compact ? ' gallery--compact' : ''}`}>
-      <ul className="gallery__grid">
-        {items.map((item, i) => (
-          <li key={item.src}>
-            <button
-              type="button"
-              className="gallery__tile"
-              onClick={() => setOpen(i)}
-              aria-label={`Ver ${KIND[item.type]}${item.label ? `: ${item.label}` : ''}`}
-            >
-              <Tile item={item} compact={compact} />
-              {item.label && <span className="gallery__label">{item.label}</span>}
-            </button>
-          </li>
-        ))}
-      </ul>
-
-      {open !== null && <Viewer items={items} index={open} onMove={move} onClose={() => setOpen(null)} />}
+    <div className={`showcase__videos${items.length > 2 ? ' showcase__videos--scroll' : ''}`} data-reveal>
+      {items.map((item) =>
+        item.type === 'video' ? (
+          <VideoFeature key={item.src} src={item.src} label={item.label} />
+        ) : (
+          <Frame key={item.src} item={item} onOpen={() => setOpen(others.indexOf(item))} />
+        ),
+      )}
+      {open !== null && <Viewer items={others} index={open} onMove={move} onClose={() => setOpen(null)} />}
     </div>
   )
 }

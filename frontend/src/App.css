@@ -1327,11 +1327,11 @@
   box-shadow: 0 30px 60px -25px rgb(0 0 0 / 0.55);
 }
 
-/* ---------- Video destacado (Expocom) ---------- */
+/* ---------- Eventos: fotos y videos grandes al lado del texto ---------- */
 
 .showcase {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: fit-content(640px) 1fr;
   gap: 70px;
   align-items: center;
   margin-top: 110px;
@@ -1578,133 +1578,98 @@
   }
 }
 
-/* ---------- Galería de un evento (fotos, videos e Instagram) ---------- */
-
-.showcase__gallery {
-  margin-top: 60px;
+/* Con muchas fotos y videos, la fila se desliza de costado */
+.showcase__videos {
+  max-width: 100%;
 }
 
-.gallery {
-  display: grid;
-  gap: 22px;
+.showcase__videos--scroll {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  margin: -10px -6px -20px;
+  padding: 10px 6px 20px;
+  scrollbar-color: var(--yellow) transparent;
 }
 
-.gallery__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 14px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.showcase__videos--scroll > * {
+  flex: none;
+  scroll-snap-align: start;
 }
 
-.gallery__tile {
-  position: relative;
+/* Foto o Instagram en el mismo marco que los videos */
+.media-frame {
   display: block;
-  width: 100%;
-  aspect-ratio: 4 / 5;
   padding: 0;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  background: #000;
+  color: #fff;
+  font: inherit;
   cursor: pointer;
 }
 
-.gallery__tile img,
-.gallery__tile video {
+.media-frame img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
   transition: transform 0.5s var(--ease);
-  pointer-events: none;
 }
 
-.gallery__tile:hover img,
-.gallery__tile:hover video {
-  transform: scale(1.05);
+.media-frame:hover img {
+  transform: scale(1.04);
 }
 
-.gallery__tile:focus-visible {
+.media-frame:focus-visible {
   outline: 3px solid var(--yellow);
-  outline-offset: 3px;
+  outline-offset: 4px;
 }
 
-.gallery__play {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-}
-
-.gallery__play svg {
-  width: 56px;
-  height: 56px;
-  padding: 14px;
-  border-radius: 50%;
-  background: rgb(0 0 0 / 0.65);
-  fill: #fff;
-  transition: background 0.25s, fill 0.25s;
-}
-
-.gallery__tile:hover .gallery__play svg {
-  background: var(--yellow);
-  fill: var(--ink);
-}
-
-.gallery__label {
-  position: absolute;
-  left: 10px;
-  bottom: 10px;
-  max-width: calc(100% - 20px);
-  padding: 5px 12px;
-  overflow: hidden;
-  border-radius: var(--radius-pill);
-  background: rgb(0 0 0 / 0.65);
-  color: #fff;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Miniatura de una publicación de Instagram (Instagram no da una imagen de vista previa) */
-.gallery__ig {
+/* Instagram sin portada: colores y logo de Instagram (Instagram no da una imagen del video) */
+.media-frame__ig {
   display: grid;
   place-content: center;
   justify-items: center;
-  gap: 10px;
+  gap: 14px;
   width: 100%;
   height: 100%;
   background: linear-gradient(45deg, #f9a03f, #e1306c 50%, #833ab4);
-  color: #fff;
-  font-size: 0.85rem;
   font-weight: 700;
-  transition: transform 0.5s var(--ease);
 }
 
-.gallery__tile:hover .gallery__ig {
-  transform: scale(1.05);
-}
-
-/* Logo chiquito de Instagram sobre la portada */
-.gallery__badge {
+/* Logo de Instagram sobre la portada */
+.media-frame__badge {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
   display: grid;
   place-items: center;
-  padding: 6px;
+  padding: 8px;
   border-radius: 50%;
   background: linear-gradient(45deg, #f9a03f, #e1306c 50%, #833ab4);
-  color: #fff;
 }
 
-.gallery--compact .gallery__badge {
-  top: 5px;
-  right: 5px;
-  padding: 4px;
+/* Eventos uno debajo del otro: el lado de los videos se va alternando */
+.showcase--flip {
+  grid-template-columns: 1fr fit-content(640px);
+}
+
+.showcase--flip .showcase__videos {
+  order: 2;
+}
+
+.showcase--text {
+  grid-template-columns: 1fr;
+  max-width: 760px;
+}
+
+@media (max-width: 960px) {
+  .showcase--flip .showcase__videos {
+    order: 0;
+  }
+
+  /* En el celular el texto va debajo, alineado a la izquierda aunque sea corto */
+  .showcase__text {
+    justify-self: stretch;
+  }
 }
 
 /* Publicación de Instagram en la vista ampliada */
@@ -1716,31 +1681,6 @@
   border: 0;
   border-radius: 18px;
   background: #fff;
-}
-
-/* Dentro de la tarjeta de un evento: miniaturas más chicas */
-.gallery--compact {
-  margin-top: 20px;
-}
-
-.gallery--compact .gallery__grid {
-  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-  gap: 8px;
-}
-
-.gallery--compact .gallery__tile {
-  aspect-ratio: 1;
-  border-radius: 12px;
-}
-
-.gallery--compact .gallery__play svg {
-  width: 36px;
-  height: 36px;
-  padding: 9px;
-}
-
-.gallery--compact .gallery__label {
-  display: none;
 }
 
 /* Flechas para pasar de foto en la vista ampliada */
@@ -1788,31 +1728,6 @@
 }
 
 /* ---------- Eventos ---------- */
-
-/* Videos dentro de la tarjeta de un evento: ocupan todo el ancho, como en el destacado */
-.event__videos {
-  display: grid;
-  gap: 16px;
-  margin-top: 22px;
-}
-
-.event__videos .video {
-  width: 100%;
-  border-width: 6px;
-  border-radius: 24px;
-}
-
-.event__videos .video--vertical {
-  max-height: 560px;
-}
-
-.event__videos .video__controls span {
-  display: none;
-}
-
-.event__videos + .gallery--compact {
-  margin-top: 14px;
-}
 
 .events__grid {
   margin-top: 90px;
