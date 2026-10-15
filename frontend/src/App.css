@@ -2369,7 +2369,13 @@
   font-size: 0.9rem;
 }
 
-/* Instagram de SYNCRA */
+/* Redes de SYNCRA (Instagram, LinkedIn…) */
+.footer__socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 26px;
+}
+
 .footer__social {
   display: inline-flex;
   align-items: center;
@@ -2401,6 +2407,11 @@
   background: linear-gradient(45deg, #f9a03f, #e1306c 50%, #833ab4);
   color: #fff;
   transform: scale(1.08);
+}
+
+.footer__social--linkedin:hover .footer__social-icon,
+.footer__social--linkedin:focus-visible .footer__social-icon {
+  background: #0a66c2;
 }
 
 /* Acceso al panel interno: grande y fácil de tocar */

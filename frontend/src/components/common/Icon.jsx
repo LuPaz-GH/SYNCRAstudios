@@ -35,6 +35,7 @@ const PATHS = {
   upload: 'M12 15V4M7 9l5-5 5 5M5 20h14',
   image: 'M4 5h16v14H4zM4 16l5-5 4 4 2-2 5 5M15.5 8.5h0',
   instagram: 'M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4zM12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM17.5 6.5h0',
+  linkedin: 'M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM8 10v7M8 7v.01M12 17v-7M12 13a3 3 0 0 1 6 0v4',
   up: 'M6 15l6-6 6 6',
   down: 'M6 9l6 6 6-6',
   // Accesibilidad

@@ -2,7 +2,12 @@ import Icon from '../common/Icon'
 import Logo from '../common/Logo'
 
 const PETALS = ['#8e44ad', '#e84393', '#f5b800', '#27ae60', '#3498db']
-const INSTAGRAM = { url: 'https://www.instagram.com/syncra_studios/', user: '@syncra_studios' }
+
+// Redes de SYNCRA. Una red sin link no se muestra: para que aparezca, completá su "url".
+const SOCIALS = [
+  { name: 'Instagram', icon: 'instagram', url: 'https://www.instagram.com/syncra_studios/', text: '@syncra_studios' },
+  { name: 'LinkedIn', icon: 'linkedin', url: '', text: 'LinkedIn' }, // ej.: 'https://www.linkedin.com/company/syncra-studios/'
+].filter((social) => social.url)
 
 export default function Footer() {
   return (
@@ -21,18 +26,23 @@ export default function Footer() {
           </svg>
           <strong>Mujeres en Red</strong>
         </p>
-        <a
-          href={INSTAGRAM.url}
-          className="footer__social"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`Instagram de SYNCRA Studios (${INSTAGRAM.user}), se abre en otra pestaña`}
-        >
-          <span className="footer__social-icon">
-            <Icon name="instagram" size={22} />
-          </span>
-          {INSTAGRAM.user}
-        </a>
+        <div className="footer__socials">
+          {SOCIALS.map((social) => (
+            <a
+              key={social.name}
+              href={social.url}
+              className={`footer__social footer__social--${social.icon}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${social.name} de SYNCRA Studios, se abre en otra pestaña`}
+            >
+              <span className="footer__social-icon">
+                <Icon name={social.icon} size={22} />
+              </span>
+              {social.text}
+            </a>
+          ))}
+        </div>
         <a href="/panel" className="footer__staff">
           <Icon name="lock" size={22} /> Acceso equipo
         </a>
