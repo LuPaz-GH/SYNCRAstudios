@@ -25,6 +25,35 @@ function Meta({ event }) {
   )
 }
 
+// Los videos se muestran grandes (se reproducen solos, sin sonido); fotos e Instagram, en miniatura.
+function splitMedia(list) {
+  const media = normalizeMedia(list)
+  return {
+    videos: media.filter((item) => item.type === 'video'),
+    others: media.filter((item) => item.type !== 'video'),
+  }
+}
+
+function EventCard({ event, index }) {
+  const { videos, others } = splitMedia(event.videos)
+  return (
+    <article className="card event" data-reveal data-spot data-tilt style={{ transitionDelay: `${index * 100}ms` }}>
+      <span className="event__kind">{event.kind}</span>
+      <h4>{event.name}</h4>
+      <Meta event={event} />
+      <p>{event.text}</p>
+      {videos.length > 0 && (
+        <div className="event__videos">
+          {videos.map((video) => (
+            <VideoFeature key={video.src} src={video.src} label={video.label} />
+          ))}
+        </div>
+      )}
+      <EventGallery items={others} compact />
+    </article>
+  )
+}
+
 export default function Events() {
   // Los eventos se cargan desde el panel. Si la API no responde, se usan los de frontend/src/assets/data/events.js.
   const [events, setEvents] = useState(EVENTS)
@@ -37,9 +66,7 @@ export default function Events() {
 
   const [featured, ...rest] = events
   // En el destacado, los videos van grandes al lado del texto; fotos e Instagram, en la galería de abajo.
-  const featuredMedia = normalizeMedia(featured?.videos)
-  const featuredVideos = featuredMedia.filter((item) => item.type === 'video')
-  const featuredGallery = featuredMedia.filter((item) => item.type !== 'video')
+  const { videos: featuredVideos, others: featuredGallery } = splitMedia(featured?.videos)
 
   return (
     <section id="eventos" className="section">
@@ -82,20 +109,7 @@ export default function Events() {
 
         <div className="cards cards--3 events__grid">
           {rest.map((event, i) => (
-            <article
-              className="card event"
-              key={event.id ?? event.name}
-              data-reveal
-              data-spot
-              data-tilt
-              style={{ transitionDelay: `${i * 100}ms` }}
-            >
-              <span className="event__kind">{event.kind}</span>
-              <h4>{event.name}</h4>
-              <Meta event={event} />
-              <p>{event.text}</p>
-              <EventGallery items={normalizeMedia(event.videos)} compact />
-            </article>
+            <EventCard key={event.id ?? event.name} event={event} index={i} />
           ))}
 
           <article className="card event event--cta" data-reveal data-spot data-tilt>

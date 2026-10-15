@@ -98,15 +98,17 @@ export default function VideoFeature({ src, label }) {
 
   return (
     <div className={`video ${vertical ? 'video--vertical' : 'video--horizontal'}`} data-spot data-tilt>
-      <span className="video__live">
-        <span className="live-dot" /> {label}
-      </span>
+      {label && (
+        <span className="video__live">
+          <span className="live-dot" /> {label}
+        </span>
+      )}
       <button
         ref={expandRef}
         type="button"
         className="video__expand"
         onClick={() => setExpanded(true)}
-        aria-label={`Ver video ${label} en grande`}
+        aria-label={label ? `Ver video ${label} en grande` : 'Ver video en grande'}
       >
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
@@ -123,7 +125,7 @@ export default function VideoFeature({ src, label }) {
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
         onLoadedMetadata={(e) => setVertical(e.target.videoHeight >= e.target.videoWidth)}
-        aria-label={label}
+        aria-label={label || 'Video'}
       />
       <div className="video__controls">
         <button type="button" onClick={togglePlay} aria-label={playing ? 'Pausar video' : 'Reproducir video'}>
@@ -156,7 +158,7 @@ export default function VideoFeature({ src, label }) {
           <dialog
             ref={dialogRef}
             className="lightbox"
-            aria-label={`Video: ${label}`}
+            aria-label={label ? `Video: ${label}` : 'Video'}
             onCancel={(e) => {
               e.preventDefault()
               close()
@@ -166,7 +168,7 @@ export default function VideoFeature({ src, label }) {
             <div className="lightbox__inner">
               <div className="lightbox__bar">
                 <span className="video__live">
-                  <span className="live-dot" /> {label}
+                  <span className="live-dot" /> {label || 'Video'}
                 </span>
                 <button type="button" className="lightbox__close" onClick={close} aria-label="Cerrar video" autoFocus>
                   <svg viewBox="0 0 24 24" aria-hidden="true">

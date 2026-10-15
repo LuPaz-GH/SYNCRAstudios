@@ -1789,6 +1789,31 @@
 
 /* ---------- Eventos ---------- */
 
+/* Videos dentro de la tarjeta de un evento: ocupan todo el ancho, como en el destacado */
+.event__videos {
+  display: grid;
+  gap: 16px;
+  margin-top: 22px;
+}
+
+.event__videos .video {
+  width: 100%;
+  border-width: 6px;
+  border-radius: 24px;
+}
+
+.event__videos .video--vertical {
+  max-height: 560px;
+}
+
+.event__videos .video__controls span {
+  display: none;
+}
+
+.event__videos + .gallery--compact {
+  margin-top: 14px;
+}
+
 .events__grid {
   margin-top: 90px;
 }
