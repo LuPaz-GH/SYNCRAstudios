@@ -3,9 +3,13 @@ import { RESOURCES } from '../config/resources.js'
 import { HttpError } from '../utils/HttpError.js'
 import { audit } from './audit.service.js'
 import { hashPassword } from './auth.service.js'
+import { cleanMedia } from '../utils/media.js'
 
 // Crear, editar, borrar (borrado lógico) y restaurar cualquier sección del panel.
 // Cada cambio queda anotado en el registro de actividad.
+
+// Tipos que se guardan como JSON en la base.
+const isJson = (type) => type === 'json' || type === 'media'
 
 export function getResource(name, user) {
   const resource = RESOURCES[name]
@@ -51,6 +55,10 @@ function clean(resource, body, partial) {
         break
       case 'json':
         value = value == null ? null : JSON.stringify(value)
+        break
+      case 'media':
+        value = cleanMedia(value)
+        value = value && JSON.stringify(value)
         break
     }
     data[key] = value
@@ -170,11 +178,11 @@ export async function update(name, user, id, body, action = 'editar') {
     if (key === 'password_hash') continue
     const type = resource.fields[key].type
     let old = prev[key]
-    if (type === 'json') old = JSON.stringify(old ?? null)
+    if (isJson(type)) old = JSON.stringify(old ?? null)
     if (type === 'time' && old) old = old.slice(0, 5) // la base guarda "10:00:00"; el formulario manda "10:00"
     if (String(old ?? '') !== String(value ?? '')) {
       changedBefore[key] = prev[key]
-      changedAfter[key] = resource.fields[key].type === 'json' ? JSON.parse(value) : value
+      changedAfter[key] = isJson(type) ? JSON.parse(value) : value
     }
   }
   const passwordChanged = Boolean(data.password_hash)

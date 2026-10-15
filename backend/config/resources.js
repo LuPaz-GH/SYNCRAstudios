@@ -1,5 +1,6 @@
 // Qué se puede gestionar desde el panel y qué campos tiene cada cosa.
-// Tipos: text (texto corto), long (texto largo), int, date, json, enum, user (id de un usuario).
+// Tipos: text (texto corto), long (texto largo), int, date, json, enum, user (id de un usuario),
+// media (fotos, videos y links de Instagram: ver utils/media.js).
 export const RESOURCES = {
   eventos: {
     table: 'events',
@@ -12,7 +13,7 @@ export const RESOURCES = {
       date: { type: 'text', max: 80 },
       place: { type: 'text', max: 160 },
       text: { type: 'long', required: true },
-      videos: { type: 'json' },
+      videos: { type: 'media' }, // la columna se llama así, pero guarda fotos, videos e Instagram
       position: { type: 'int' },
     },
   },

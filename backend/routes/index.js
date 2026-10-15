@@ -4,6 +4,7 @@ import publicRoutes from './public.routes.js'
 import authRoutes from './auth.routes.js'
 import panelRoutes from './panel.routes.js'
 import activityRoutes from './activity.routes.js'
+import mediaRoutes from './media.routes.js'
 import resourcesRoutes from './resources.routes.js'
 
 const router = Router()
@@ -16,6 +17,7 @@ router.use('/auth', authRoutes)
 router.use(requireUser)
 router.use(panelRoutes)
 router.use('/actividad', activityRoutes)
+router.use('/media', mediaRoutes)
 router.use(resourcesRoutes) // va última: captura /:resource
 
 export default router
