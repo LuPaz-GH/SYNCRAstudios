@@ -60,19 +60,32 @@ export default function MediaField({ value, onChange, onBusyChange, ctx }) {
     setError(errors.join(' '))
   }
 
-  const addLink = () => {
-    const src = instagramUrl(link)
+  const addLink = (value = link) => {
+    const src = instagramUrl(value)
     if (!src) {
-      setError('Ese link no es de una publicación o reel de Instagram. Copialo desde "Compartir" → "Copiar enlace".')
+      setError(
+        /instagram\.com\/share\//i.test(value)
+          ? 'Ese es un link corto de "compartir". Abrilo en el navegador, esperá que cargue la publicación y copiá la dirección de arriba.'
+          : 'Ese link no es de una publicación o reel de Instagram. En Instagram tocá "Compartir" → "Copiar enlace".',
+      )
       return
     }
     if (items.some((item) => item.src === src)) {
       setError('Esa publicación ya está agregada.')
+      setLink('')
       return
     }
     onChange((list) => [...list, { type: 'instagram', src, label: '' }])
     setLink('')
     setError('')
+  }
+
+  // Al pegar un link válido se agrega solo, sin tener que tocar "Agregar".
+  const onLinkPaste = (e) => {
+    const value = e.clipboardData.getData('text')
+    if (!instagramUrl(value)) return
+    e.preventDefault()
+    addLink(value)
   }
 
   return (
@@ -140,6 +153,8 @@ export default function MediaField({ value, onChange, onBusyChange, ctx }) {
           type="url"
           value={link}
           onChange={(e) => setLink(e.target.value)}
+          onPaste={onLinkPaste}
+          onBlur={() => instagramUrl(link) && addLink()} // si quedó escrito y se toca "Guardar", no se pierde
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               e.preventDefault()
@@ -149,7 +164,7 @@ export default function MediaField({ value, onChange, onBusyChange, ctx }) {
           placeholder="Pegá el link de una publicación o reel de Instagram"
           aria-label="Link de Instagram"
         />
-        <button type="button" className="pn-btn" onClick={addLink} disabled={!link.trim()}>
+        <button type="button" className="pn-btn" onClick={() => addLink()} disabled={!link.trim()}>
           <Icon name="instagram" size={18} /> Agregar
         </button>
       </div>

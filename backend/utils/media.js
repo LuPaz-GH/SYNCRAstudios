@@ -11,7 +11,7 @@ const TYPES = ['video', 'image', 'instagram']
 export function instagramUrl(value) {
   const match = String(value || '')
     .trim()
-    .match(/^(?:https?:\/\/)?(?:www\.)?instagram\.com\/(?:[\w.]+\/)?(p|reels?|tv)\/([\w-]{5,40})/i)
+    .match(/^(?:https?:\/\/)?(?:www\.)?instagram\.com\/(?:(?!share\/)[\w.]+\/)?(p|reels?|tv)\/([\w-]{5,40})/i)
   if (!match) return null
   const kind = match[1].toLowerCase() === 'p' ? 'p' : match[1].toLowerCase() === 'tv' ? 'tv' : 'reel'
   return `https://www.instagram.com/${kind}/${match[2]}/`
