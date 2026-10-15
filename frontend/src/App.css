@@ -1669,16 +1669,31 @@
   white-space: nowrap;
 }
 
-.gallery__posts {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 22px;
+/* Miniatura de una publicación de Instagram (Instagram no da una imagen de vista previa) */
+.gallery__ig {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #f9a03f, #e1306c 50%, #833ab4);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: transform 0.5s var(--ease);
 }
 
-.gallery__insta {
-  width: min(400px, 100%);
-  height: 600px;
+.gallery__tile:hover .gallery__ig {
+  transform: scale(1.05);
+}
+
+/* Publicación de Instagram en la vista ampliada */
+.lightbox__insta {
+  display: block;
+  width: min(400px, 92vw);
+  height: 640px;
+  max-height: calc(100vh - 180px);
   border: 0;
   border-radius: 18px;
   background: #fff;
@@ -1707,10 +1722,6 @@
 
 .gallery--compact .gallery__label {
   display: none;
-}
-
-.gallery--compact .gallery__insta {
-  width: 100%;
 }
 
 /* Flechas para pasar de foto en la vista ampliada */
