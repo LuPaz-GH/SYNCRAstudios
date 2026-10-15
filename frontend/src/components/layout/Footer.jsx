@@ -2,6 +2,7 @@ import Icon from '../common/Icon'
 import Logo from '../common/Logo'
 
 const PETALS = ['#8e44ad', '#e84393', '#f5b800', '#27ae60', '#3498db']
+const INSTAGRAM = { url: 'https://www.instagram.com/syncra_studios/', user: '@syncra_studios' }
 
 export default function Footer() {
   return (
@@ -20,6 +21,18 @@ export default function Footer() {
           </svg>
           <strong>Mujeres en Red</strong>
         </p>
+        <a
+          href={INSTAGRAM.url}
+          className="footer__social"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Instagram de SYNCRA Studios (${INSTAGRAM.user}), se abre en otra pestaña`}
+        >
+          <span className="footer__social-icon">
+            <Icon name="instagram" size={22} />
+          </span>
+          {INSTAGRAM.user}
+        </a>
         <a href="/panel" className="footer__staff">
           <Icon name="lock" size={22} /> Acceso equipo
         </a>

@@ -2369,6 +2369,40 @@
   font-size: 0.9rem;
 }
 
+/* Instagram de SYNCRA */
+.footer__social {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--white);
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer__social-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  transition: background 0.3s, border-color 0.3s, transform 0.3s var(--ease);
+}
+
+.footer__social:hover,
+.footer__social:focus-visible {
+  color: var(--yellow);
+}
+
+.footer__social:hover .footer__social-icon,
+.footer__social:focus-visible .footer__social-icon {
+  border-color: transparent;
+  background: linear-gradient(45deg, #f9a03f, #e1306c 50%, #833ab4);
+  color: #fff;
+  transform: scale(1.08);
+}
+
 /* Acceso al panel interno: grande y fácil de tocar */
 .footer__staff {
   display: inline-flex;
