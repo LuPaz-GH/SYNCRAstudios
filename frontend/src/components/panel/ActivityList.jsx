@@ -3,11 +3,24 @@ import { api } from '../../services/api'
 import { fullDate, when } from '../../utils/format'
 import { BOOKING_STATUS, ENTITY_LABELS, MESSAGE_STATUS, MODALITY, TASK_STATUS, ROLES, fieldLabel } from '../../utils/panelConfig'
 
+// "2 fotos, 1 video y 1 de Instagram"
+function mediaSummary(list) {
+  const count = (type) => list.filter((v) => (v.type || 'video') === type).length
+  const parts = [
+    [count('image'), 'foto', 'fotos'],
+    [count('video'), 'video', 'videos'],
+    [count('instagram'), 'de Instagram', 'de Instagram'],
+  ]
+    .filter(([n]) => n)
+    .map(([n, one, many]) => `${n} ${n === 1 ? one : many}`)
+  return parts.length > 1 ? `${parts.slice(0, -1).join(', ')} y ${parts.at(-1)}` : parts[0] || '(vacío)'
+}
+
 const VALUE_LABELS = { status: { ...MESSAGE_STATUS, ...TASK_STATUS, ...BOOKING_STATUS }, role: ROLES, modality: MODALITY }
 
 function showValue(key, value) {
   if (value === null || value === undefined || value === '') return '(vacío)'
-  if (key === 'videos' && Array.isArray(value)) return value.map((v) => v.label || v.src).join(', ')
+  if (key === 'videos' && Array.isArray(value)) return mediaSummary(value)
   if (VALUE_LABELS[key]?.[value]) return VALUE_LABELS[key][value]
   return String(value)
 }

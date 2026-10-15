@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react'
 import Icon from '../common/Icon'
 import RevealText from '../common/RevealText'
 import VideoFeature from './VideoFeature'
+import EventGallery from './EventGallery'
 import { EVENTS } from '../../assets/data/events'
 import { getPublicEvents } from '../../services/public.service'
+import { normalizeMedia } from '../../utils/media'
 
 function Meta({ event }) {
   if (!event.date && !event.place) return null
@@ -34,6 +36,10 @@ export default function Events() {
   }, [])
 
   const [featured, ...rest] = events
+  // En el destacado, los videos van grandes al lado del texto; fotos e Instagram, en la galería de abajo.
+  const featuredMedia = normalizeMedia(featured?.videos)
+  const featuredVideos = featuredMedia.filter((item) => item.type === 'video')
+  const featuredGallery = featuredMedia.filter((item) => item.type !== 'video')
 
   return (
     <section id="eventos" className="section">
@@ -50,21 +56,28 @@ export default function Events() {
         </div>
 
         {featured && (
-          <div className="showcase">
-            {featured.videos?.length > 0 && (
-              <div className="showcase__videos" data-reveal>
-                {featured.videos.map((video) => (
-                  <VideoFeature key={video.src} src={video.src} label={video.label} />
-                ))}
+          <>
+            <div className="showcase">
+              {featuredVideos.length > 0 && (
+                <div className="showcase__videos" data-reveal>
+                  {featuredVideos.map((video) => (
+                    <VideoFeature key={video.src} src={video.src} label={video.label} />
+                  ))}
+                </div>
+              )}
+              <div className="showcase__text" data-reveal>
+                <span className="event__kind">{featured.kind}</span>
+                <h3 className="showcase__title">{featured.name}</h3>
+                <Meta event={featured} />
+                <p className="lead">{featured.text}</p>
+              </div>
+            </div>
+            {featuredGallery.length > 0 && (
+              <div className="showcase__gallery" data-reveal>
+                <EventGallery items={featuredGallery} />
               </div>
             )}
-            <div className="showcase__text" data-reveal>
-              <span className="event__kind">{featured.kind}</span>
-              <h3 className="showcase__title">{featured.name}</h3>
-              <Meta event={featured} />
-              <p className="lead">{featured.text}</p>
-            </div>
-          </div>
+          </>
         )}
 
         <div className="cards cards--3 events__grid">
@@ -81,6 +94,7 @@ export default function Events() {
               <h4>{event.name}</h4>
               <Meta event={event} />
               <p>{event.text}</p>
+              <EventGallery items={normalizeMedia(event.videos)} compact />
             </article>
           ))}
 

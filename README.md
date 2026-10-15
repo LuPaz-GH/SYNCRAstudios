@@ -152,7 +152,16 @@ npm run dev
 
 ## ➕ Agregar un evento
 
-> 💡 Con el panel funcionando, los eventos se cargan desde **/panel/eventos**. Lo de abajo sirve como respaldo si la base no responde.
+> 💡 Con el panel funcionando, los eventos se cargan desde **/panel/eventos**. Ahí mismo, en **Fotos y videos**, se suben archivos desde la compu o el celular (se guardan en Cloudinary) o se pegan links de publicaciones y reels de Instagram. Lo de abajo sirve como respaldo si la base no responde.
+
+### 📸 Configurar dónde se guardan las fotos y videos (una sola vez)
+
+1. Creá una cuenta gratis en [cloudinary.com](https://cloudinary.com).
+2. En el Dashboard → **API Keys**, copiá *Cloud name*, *API Key* y *API Secret*.
+3. Ponelos en el `.env` (y en Netlify → *Site configuration* → *Environment variables*) como `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY` y `CLOUDINARY_API_SECRET`.
+4. En Netlify, volvé a publicar el sitio (*Deploys* → *Trigger deploy*) para que tome los datos nuevos.
+
+Límites del plan gratis: fotos de hasta 10 MB y videos de hasta 100 MB.
 
 1. 🎥 Guardá el video en `frontend/public/videos/` (sin espacios en el nombre)
 2. ✏️ Abrí `frontend/src/assets/data/events.js` y sumá un bloque:

@@ -95,9 +95,9 @@ export const RESOURCES = {
       { key: 'text', label: 'Descripción', type: 'textarea', required: true },
       {
         key: 'videos',
-        label: 'Videos',
-        type: 'videos',
-        hint: 'Uno por línea: ruta | etiqueta. Ej.: /videos/expocom-presentacion.mp4 | Presentación',
+        label: 'Fotos y videos',
+        type: 'media',
+        hint: 'Subí archivos desde la compu o el celular, o pegá links de Instagram. Usá las flechas para cambiar el orden.',
       },
       { key: 'position', label: 'Orden', type: 'number', hint: 'Número más bajo = aparece primero.' },
     ],

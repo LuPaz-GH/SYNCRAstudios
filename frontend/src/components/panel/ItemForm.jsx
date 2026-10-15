@@ -1,23 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import Icon from '../common/Icon'
+import MediaField from './MediaField'
 import { api } from '../../services/api'
-
-// Los videos se escriben uno por línea: "ruta | etiqueta".
-const videosToText = (videos) => (videos || []).map((v) => [v.src, v.label].filter(Boolean).join(' | ')).join('\n')
-const textToVideos = (text) => {
-  const list = text
-    .split('\n')
-    .map((line) => line.split('|').map((part) => part.trim()))
-    .filter(([src]) => src)
-    .map(([src, label]) => ({ src, label: label || '' }))
-  return list.length ? list : null
-}
+import { normalizeMedia } from '../../utils/media'
 
 function initialValues(config, row) {
   const values = {}
   for (const field of config.fields) {
     const value = row ? row[field.key] : config.defaults?.[field.key]
-    if (field.type === 'videos') values[field.key] = videosToText(value)
+    if (field.type === 'media') values[field.key] = normalizeMedia(value)
     else if (field.type === 'password') values[field.key] = ''
     else values[field.key] = value ?? ''
   }
@@ -30,6 +21,7 @@ export default function ItemForm({ name, config, row, ctx, onClose, onSaved }) {
   const [team, setTeam] = useState([])
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const needsTeam = config.fields.some((f) => f.type === 'user')
 
   useEffect(() => {
@@ -44,7 +36,7 @@ export default function ItemForm({ name, config, row, ctx, onClose, onSaved }) {
     const body = {}
     for (const field of config.fields) {
       const value = values[field.key]
-      if (field.type === 'videos') body[field.key] = textToVideos(value)
+      if (field.type === 'media') body[field.key] = value.length ? value : null
       else if (field.type === 'password') {
         if (value) body[field.key] = value
       } else body[field.key] = value
@@ -79,8 +71,17 @@ export default function ItemForm({ name, config, row, ctx, onClose, onSaved }) {
             const required = field.required || (isPassword && !row)
             const common = { id, value: values[field.key], onChange: update(field.key), required }
             let input
-            if (field.type === 'textarea' || field.type === 'videos') {
-              input = <textarea rows={field.type === 'videos' ? 3 : 5} {...common} />
+            if (field.type === 'media') {
+              input = (
+                <MediaField
+                  value={values[field.key]}
+                  onChange={(change) => setValues((v) => ({ ...v, [field.key]: change(v[field.key]) }))}
+                  onBusyChange={setUploading}
+                  ctx={ctx}
+                />
+              )
+            } else if (field.type === 'textarea') {
+              input = <textarea rows={5} {...common} />
             } else if (field.type === 'select') {
               input = (
                 <select {...common}>
@@ -117,12 +118,14 @@ export default function ItemForm({ name, config, row, ctx, onClose, onSaved }) {
                 ? 'Dejala vacía para no cambiarla.'
                 : 'Mínimo 8 caracteres. Pasásela a la persona por un medio privado.'
               : field.hint
+            // El campo de fotos y videos tiene varios controles: su título no apunta a uno solo.
+            const Title = field.type === 'media' ? 'span' : 'label'
             return (
               <div key={field.key} className="pn-field">
-                <label htmlFor={id}>
+                <Title htmlFor={field.type === 'media' ? undefined : id}>
                   {field.label}
                   {!required && <em> (opcional)</em>}
-                </label>
+                </Title>
                 {input}
                 {hint && <small>{hint}</small>}
               </div>
@@ -140,8 +143,8 @@ export default function ItemForm({ name, config, row, ctx, onClose, onSaved }) {
           <button type="button" className="pn-btn" onClick={onClose}>
             Cancelar
           </button>
-          <button type="submit" className="btn btn--primary btn--sm" disabled={busy}>
-            {busy ? 'Guardando…' : 'Guardar'}
+          <button type="submit" className="btn btn--primary btn--sm" disabled={busy || uploading}>
+            {uploading ? 'Subiendo archivos…' : busy ? 'Guardando…' : 'Guardar'}
           </button>
         </footer>
       </form>

@@ -806,6 +806,138 @@
   border-top: 1px solid var(--line);
 }
 
+/* ---------- Fotos, videos e Instagram de un evento ---------- */
+
+.pn-media {
+  display: grid;
+  gap: 12px;
+}
+
+.pn-media__list,
+.pn-media__uploads {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pn-media__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg);
+}
+
+.pn-media__thumb {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--yellow);
+}
+
+.pn-media__thumb img,
+.pn-media__thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pn-media__info {
+  display: grid;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.pn-media__type {
+  color: var(--gray);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pn-field .pn-media__info input {
+  padding: 7px 10px;
+  border-radius: 10px;
+  font-size: 0.92rem;
+}
+
+.pn-media__actions {
+  display: flex;
+  flex: none;
+}
+
+.pn-media__actions .pn-icon-btn {
+  width: 36px;
+  height: 36px;
+}
+
+.pn-media__actions .pn-icon-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+  background: transparent;
+  color: var(--muted);
+}
+
+.pn-media__uploads li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 120px 3.5em;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+
+.pn-media__uploads li span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pn-media__uploads progress {
+  width: 100%;
+  accent-color: var(--yellow);
+}
+
+.pn-media__uploads li span:last-child {
+  text-align: right;
+  color: var(--gray);
+}
+
+.pn-media__link {
+  display: flex;
+  gap: 8px;
+}
+
+.pn-media__link input {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 520px) {
+  .pn-media__item {
+    flex-wrap: wrap;
+  }
+
+  .pn-media__actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .pn-media__link {
+    flex-direction: column;
+  }
+}
+
 /* ---------- Avisos ---------- */
 
 .pn-toasts {

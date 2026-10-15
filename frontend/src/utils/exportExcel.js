@@ -22,8 +22,8 @@ function readable(field, row) {
       return dayDate(value)
     case 'time':
       return value ? value.slice(0, 5) : ''
-    case 'videos':
-      return (value || []).map((v) => [v.src, v.label].filter(Boolean).join(' | ')).join(', ')
+    case 'media':
+      return (value || []).map((v) => [v.label, v.src].filter(Boolean).join(': ')).join(', ')
     default:
       return value
   }

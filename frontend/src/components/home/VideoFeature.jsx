@@ -8,6 +8,7 @@ export default function VideoFeature({ src, label }) {
   const videoRef = useRef(null)
   const dialogRef = useRef(null)
   const bigRef = useRef(null)
+  const expandRef = useRef(null)
   const reduced = usePrefersReducedMotion()
   const [playing, setPlaying] = useState(false)
   const [muted, setMuted] = useState(true)
@@ -54,7 +55,8 @@ export default function VideoFeature({ src, label }) {
     const small = videoRef.current
     const big = bigRef.current
     const wasPlaying = !small.paused
-    const trigger = document.activeElement
+    // Se guarda dónde estaba la página para volver exactamente ahí al cerrar.
+    const scrollY = window.scrollY
 
     small.pause()
     big.currentTime = small.currentTime
@@ -67,7 +69,9 @@ export default function VideoFeature({ src, label }) {
       small.currentTime = big.currentTime
       document.body.style.overflow = ''
       if (wasPlaying) small.play().catch(() => {})
-      trigger?.focus()
+      // El foco vuelve al botón sin desplazar la página, y se restaura la posición sin animación.
+      expandRef.current?.focus({ preventScroll: true })
+      window.scrollTo({ top: scrollY, behavior: 'instant' })
     }
   }, [expanded])
 
@@ -98,6 +102,7 @@ export default function VideoFeature({ src, label }) {
         <span className="live-dot" /> {label}
       </span>
       <button
+        ref={expandRef}
         type="button"
         className="video__expand"
         onClick={() => setExpanded(true)}

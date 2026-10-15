@@ -1578,6 +1578,185 @@
   }
 }
 
+/* ---------- Galería de un evento (fotos, videos e Instagram) ---------- */
+
+.showcase__gallery {
+  margin-top: 60px;
+}
+
+.gallery {
+  display: grid;
+  gap: 22px;
+}
+
+.gallery__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gallery__tile {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #000;
+  cursor: pointer;
+}
+
+.gallery__tile img,
+.gallery__tile video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s var(--ease);
+  pointer-events: none;
+}
+
+.gallery__tile:hover img,
+.gallery__tile:hover video {
+  transform: scale(1.05);
+}
+
+.gallery__tile:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 3px;
+}
+
+.gallery__play {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.gallery__play svg {
+  width: 56px;
+  height: 56px;
+  padding: 14px;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.65);
+  fill: #fff;
+  transition: background 0.25s, fill 0.25s;
+}
+
+.gallery__tile:hover .gallery__play svg {
+  background: var(--yellow);
+  fill: var(--ink);
+}
+
+.gallery__label {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  max-width: calc(100% - 20px);
+  padding: 5px 12px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: rgb(0 0 0 / 0.65);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gallery__posts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 22px;
+}
+
+.gallery__insta {
+  width: min(400px, 100%);
+  height: 600px;
+  border: 0;
+  border-radius: 18px;
+  background: #fff;
+}
+
+/* Dentro de la tarjeta de un evento: miniaturas más chicas */
+.gallery--compact {
+  margin-top: 20px;
+}
+
+.gallery--compact .gallery__grid {
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 8px;
+}
+
+.gallery--compact .gallery__tile {
+  aspect-ratio: 1;
+  border-radius: 12px;
+}
+
+.gallery--compact .gallery__play svg {
+  width: 36px;
+  height: 36px;
+  padding: 9px;
+}
+
+.gallery--compact .gallery__label {
+  display: none;
+}
+
+.gallery--compact .gallery__insta {
+  width: 100%;
+}
+
+/* Flechas para pasar de foto en la vista ampliada */
+.lightbox__inner img.lightbox__video {
+  object-fit: contain;
+}
+
+/* Con flechas abajo, la foto deja lugar para que entren en pantalla */
+.lightbox__inner:has(.lightbox__nav) .lightbox__video {
+  max-height: calc(100vh - 180px);
+}
+
+.lightbox__nav {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+.lightbox__nav button {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.12);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.25s, color 0.25s;
+}
+
+.lightbox__nav button:hover {
+  background: var(--yellow);
+  color: var(--ink);
+}
+
+.lightbox__nav svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 /* ---------- Eventos ---------- */
 
 .events__grid {
