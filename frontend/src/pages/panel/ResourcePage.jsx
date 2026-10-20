@@ -5,6 +5,7 @@ import { fullDate, localDay, when } from '../../utils/format'
 import ItemForm from '../../components/panel/ItemForm'
 import Pager from '../../components/panel/Pager'
 import DateRange from '../../components/panel/DateRange'
+import ConfirmDialog from '../../components/panel/ConfirmDialog'
 import { exportToExcel } from '../../utils/exportExcel'
 
 const PAGE_SIZE = 20
@@ -17,6 +18,7 @@ export default function ResourcePage({ name, config, ctx }) {
   const [filter, setFilter] = useState('')
   const [editing, setEditing] = useState(null) // null = cerrado, {} = nuevo, fila = editar
   const [page, setPage] = useState(1)
+  const [purging, setPurging] = useState(null) // fila que se está por eliminar definitivamente
   const [dates, setDates] = useState({ from: '', to: '' })
   // Qué fecha usa el filtro Desde/Hasta: la de cada sección (ej. Agenda: el día del evento) o la de creación.
   const dateFilter = config.dateFilter || { key: 'created_at', label: 'Creado' }
@@ -68,17 +70,15 @@ export default function ResourcePage({ name, config, ctx }) {
     }
   }
 
-  // Borrado definitivo (solo administrador, desde la papelera). Pide confirmación porque no se puede deshacer.
+  // Borrado definitivo (solo administrador, desde la papelera). Se confirma en una ventana porque no se puede deshacer.
   const purge = async (row) => {
-    const ok = window.confirm(
-      `¿Eliminar definitivamente "${config.title(row)}"?\n\nSe borra para siempre, junto con sus datos del registro de actividad. No se puede deshacer.`,
-    )
-    if (!ok) return
     try {
       await api(`/${name}/${row.id}/definitivo`, { method: 'DELETE' })
+      setPurging(null)
       notify(`"${config.title(row)}" se eliminó definitivamente.`)
       load()
     } catch (err) {
+      setPurging(null)
       handleError(err)
     }
   }
@@ -221,7 +221,7 @@ export default function ResourcePage({ name, config, ctx }) {
                         <Icon name="undo" size={18} /> Restaurar
                       </button>
                       {isAdmin && (
-                        <button className="pn-btn pn-btn--danger" onClick={() => purge(row)}>
+                        <button className="pn-btn pn-btn--danger" onClick={() => setPurging(row)}>
                           <Icon name="trash" size={18} /> Eliminar definitivamente
                         </button>
                       )}
@@ -260,6 +260,21 @@ export default function ResourcePage({ name, config, ctx }) {
           ctx={ctx}
           onClose={() => setEditing(null)}
           onSaved={onSaved}
+        />
+      )}
+
+      {purging && (
+        <ConfirmDialog
+          title="¿Eliminar definitivamente?"
+          item={config.title(purging)}
+          points={[
+            'Se borra para siempre del sistema.',
+            'También se borran sus datos del registro de actividad.',
+            'No se puede deshacer ni restaurar.',
+          ]}
+          confirmLabel="Sí, eliminar para siempre"
+          onConfirm={() => purge(purging)}
+          onClose={() => setPurging(null)}
         />
       )}
     </section>

@@ -387,6 +387,104 @@ a.pn-btn {
   color: #ff9c9c;
 }
 
+/* Botón rojo lleno: para confirmar algo que no se puede deshacer */
+.pn-btn--solid-danger {
+  border-color: #e5484d;
+  background: #e5484d;
+  color: #fff;
+}
+
+.pn-btn--solid-danger:hover {
+  border-color: #ff6369;
+  background: #ff6369;
+  color: #fff;
+}
+
+/* ---------- Ventana de confirmación (ej. eliminar definitivamente) ---------- */
+
+.pn-dialog.pn-confirm {
+  width: min(460px, calc(100% - 32px));
+}
+
+.pn-confirm[open] {
+  animation: pn-confirm-in 0.25s var(--ease);
+}
+
+@keyframes pn-confirm-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+}
+
+.pn-confirm__body {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 30px 28px 24px;
+  text-align: center;
+}
+
+.pn-confirm__icon {
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgb(229 72 77 / 0.15);
+  color: #ff7a7a;
+}
+
+.pn-confirm__body h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--white);
+}
+
+/* Nombre de lo que se va a borrar, destacado */
+.pn-confirm__item {
+  max-width: 100%;
+  margin: 0;
+  padding: 8px 16px;
+  overflow-wrap: anywhere;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--white);
+  font-weight: 700;
+}
+
+.pn-confirm__points {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.pn-confirm__points li::before {
+  content: '•';
+  margin-right: 8px;
+  color: #ff7a7a;
+}
+
+.pn-confirm .pn-dialog__foot {
+  gap: 10px;
+}
+
+@media (max-width: 480px) {
+  .pn-confirm .pn-dialog__foot {
+    flex-direction: column-reverse;
+  }
+
+  .pn-confirm .pn-dialog__foot .pn-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 .pn-link {
   display: inline-flex;
   align-items: center;
