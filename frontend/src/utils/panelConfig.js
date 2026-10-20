@@ -196,6 +196,7 @@ export const ACTION_LABELS = {
   restaurar: 'Restauró',
   deshacer: 'Deshizo',
   login: 'Entró',
+  eliminar: 'Eliminó definitivamente',
 }
 
 export function fieldLabel(entity, key) {

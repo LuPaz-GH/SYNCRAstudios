@@ -19,6 +19,11 @@ export async function remove(req, res) {
   res.json({ ok: true })
 }
 
+export async function purge(req, res) {
+  await resourcesService.purge(req.params.resource, req.user, req.params.id)
+  res.json({ ok: true })
+}
+
 export async function restore(req, res) {
   await resourcesService.restore(req.params.resource, req.user, req.params.id)
   res.json({ ok: true })

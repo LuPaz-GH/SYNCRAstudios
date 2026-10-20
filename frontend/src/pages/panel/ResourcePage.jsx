@@ -68,6 +68,21 @@ export default function ResourcePage({ name, config, ctx }) {
     }
   }
 
+  // Borrado definitivo (solo administrador, desde la papelera). Pide confirmación porque no se puede deshacer.
+  const purge = async (row) => {
+    const ok = window.confirm(
+      `¿Eliminar definitivamente "${config.title(row)}"?\n\nSe borra para siempre, junto con sus datos del registro de actividad. No se puede deshacer.`,
+    )
+    if (!ok) return
+    try {
+      await api(`/${name}/${row.id}/definitivo`, { method: 'DELETE' })
+      notify(`"${config.title(row)}" se eliminó definitivamente.`)
+      load()
+    } catch (err) {
+      handleError(err)
+    }
+  }
+
   const remove = async (row) => {
     try {
       await api(`/${name}/${row.id}`, { method: 'DELETE' })
@@ -94,7 +109,7 @@ export default function ResourcePage({ name, config, ctx }) {
           <p>
             {trash
               ? isAdmin
-                ? 'Todo lo que se borró. Podés restaurar cualquier cosa.'
+                ? 'Todo lo que se borró. Podés restaurarlo o eliminarlo definitivamente (por ejemplo, si una persona pide que borren sus datos).'
                 : 'Lo que borraste vos. Si necesitás recuperar algo que borró otra persona, pedíselo al administrador.'
               : config.intro}
           </p>
@@ -201,9 +216,16 @@ export default function ResourcePage({ name, config, ctx }) {
                 </div>
                 <div className="pn-item__actions">
                   {trash ? (
-                    <button className="pn-btn" onClick={() => restore(row)}>
-                      <Icon name="undo" size={18} /> Restaurar
-                    </button>
+                    <>
+                      <button className="pn-btn" onClick={() => restore(row)}>
+                        <Icon name="undo" size={18} /> Restaurar
+                      </button>
+                      {isAdmin && (
+                        <button className="pn-btn pn-btn--danger" onClick={() => purge(row)}>
+                          <Icon name="trash" size={18} /> Eliminar definitivamente
+                        </button>
+                      )}
+                    </>
                   ) : (
                     <>
                       {link && (

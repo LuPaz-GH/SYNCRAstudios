@@ -41,6 +41,18 @@ for (const [table, column, definition] of NEW_COLUMNS) {
   console.log(`✔ Se agregó la columna "${column}" a "${table}".`)
 }
 
+// Acción "eliminar" (borrado definitivo desde la papelera) en el registro de actividad.
+const [[{ actionType }]] = await conn.query(
+  "SELECT COLUMN_TYPE AS actionType FROM information_schema.columns WHERE table_schema = ? AND table_name = 'audit_log' AND column_name = 'action'",
+  [dbName],
+)
+if (!actionType.includes("'eliminar'")) {
+  await conn.query(
+    "ALTER TABLE audit_log MODIFY action ENUM('crear', 'editar', 'borrar', 'restaurar', 'deshacer', 'login', 'eliminar') NOT NULL",
+  )
+  console.log('✔ El registro de actividad ya acepta "eliminar definitivamente".')
+}
+
 // Cargamos el evento que hoy está fijo en la web, para que no desaparezca.
 const [[{ total }]] = await conn.query('SELECT COUNT(*) AS total FROM events')
 if (total === 0) {

@@ -65,7 +65,9 @@ export default function ActivityList({ entries, ctx, onChange }) {
   return (
     <ol className="pn-log">
       {entries.map((entry) => {
-        const canUndo = ctx.isAdmin && onChange && ['editar', 'deshacer', 'borrar'].includes(entry.action)
+        // Sin entity_id: el registro se eliminó definitivamente, ya no hay nada que deshacer ni restaurar.
+        const canUndo =
+          ctx.isAdmin && onChange && entry.entity_id && ['editar', 'deshacer', 'borrar'].includes(entry.action)
         const hasDetails = entry.before_data || entry.after_data
         return (
           <li key={entry.id} className={`pn-log__item pn-log__item--${entry.action}`}>

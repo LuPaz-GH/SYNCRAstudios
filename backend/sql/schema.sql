@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS bookings (
 CREATE TABLE IF NOT EXISTS audit_log (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   user_id INT UNSIGNED NULL,
-  action ENUM('crear', 'editar', 'borrar', 'restaurar', 'deshacer', 'login') NOT NULL,
+  action ENUM('crear', 'editar', 'borrar', 'restaurar', 'deshacer', 'login', 'eliminar') NOT NULL,
   entity VARCHAR(40) NOT NULL,
   entity_id INT UNSIGNED NULL,
   summary VARCHAR(255) NOT NULL DEFAULT '',

@@ -774,7 +774,8 @@ a.pn-btn {
   background: var(--yellow);
 }
 
-.pn-log__item--borrar .pn-log__dot {
+.pn-log__item--borrar .pn-log__dot,
+.pn-log__item--eliminar .pn-log__dot {
   background: #ff7a7a;
 }
 

@@ -236,6 +236,27 @@ export async function restore(name, user, id) {
   await audit(user.id, 'restaurar', name, Number(id), `Restauró ${resource.label} "${titleOf(resource, row)}"`, null, snapshot(resource, row))
 }
 
+// Borrado definitivo (solo administrador, y solo desde la papelera). No se puede deshacer.
+// También borra los datos guardados en el registro de actividad ("antes" y "después") y el nombre
+// en los resúmenes, para que no quede ninguna copia (Ley 25.326: derecho a la supresión de datos).
+export async function purge(name, user, id) {
+  const resource = getResource(name, user)
+  if (user.role !== 'admin') throw new HttpError(403, 'Solo el administrador puede eliminar definitivamente.')
+  const row = await findRow(resource, id)
+  if (!row.deleted_at) throw new HttpError(409, 'Primero hay que mandarlo a la papelera.')
+
+  const title = String(row[resource.title] || '')
+  await query(`DELETE FROM ${resource.table} WHERE id = ?`, [id])
+  await query(
+    `UPDATE audit_log
+     SET before_data = NULL, after_data = NULL, entity_id = NULL,
+         summary = IF(? = '', summary, REPLACE(summary, CONCAT('"', ?, '"'), '"(eliminado)"'))
+     WHERE entity = ? AND entity_id = ?`,
+    [title, title, name, id],
+  )
+  await audit(user.id, 'eliminar', name, null, `Eliminó definitivamente de la papelera: ${resource.label}`)
+}
+
 // Deshace una edición del registro: vuelve los campos a como estaban antes.
 export async function undo(user, logId) {
   const [entry] = await query('SELECT * FROM audit_log WHERE id = ?', [logId])
