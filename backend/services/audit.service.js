@@ -17,7 +17,13 @@ export async function audit(userId, action, entity, entityId, summary, before = 
   )
 }
 
-export async function activity(user, { userId, entity, action, page = 1 } = {}) {
+// Fecha que llega por la URL (ej. "2026-10-15T03:00:00.000Z"); si no es válida, se ignora.
+const toDate = (value) => {
+  const date = value ? new Date(value) : null
+  return date && !Number.isNaN(date.getTime()) ? date : null
+}
+
+export async function activity(user, { userId, entity, action, search, from, to, page = 1 } = {}) {
   const where = []
   const params = []
   // El administrador ve todo; cada empleado ve solo su propia actividad.
@@ -35,6 +41,22 @@ export async function activity(user, { userId, entity, action, page = 1 } = {}) 
   if (action) {
     where.push('a.action = ?')
     params.push(action)
+  }
+  // Desde / Hasta: "hasta" ya viene como el comienzo del día siguiente.
+  if (toDate(from)) {
+    where.push('a.created_at >= ?')
+    params.push(toDate(from))
+  }
+  if (toDate(to)) {
+    where.push('a.created_at < ?')
+    params.push(toDate(to))
+  }
+  // Buscador: en el resumen del movimiento y en el nombre de quien lo hizo.
+  const words = String(search || '').trim().slice(0, 100)
+  if (words) {
+    where.push('(a.summary LIKE ? OR u.name LIKE ?)')
+    const like = `%${words.replace(/[\\%_]/g, '\\$&')}%`
+    params.push(like, like)
   }
   const size = 50
   const offset = (Math.max(1, Number(page) || 1) - 1) * size

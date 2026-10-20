@@ -9,6 +9,7 @@ function initialValues(config, row) {
   for (const field of config.fields) {
     const value = row ? row[field.key] : config.defaults?.[field.key]
     if (field.type === 'media') values[field.key] = normalizeMedia(value)
+    else if (field.type === 'checkbox') values[field.key] = Boolean(value)
     else if (field.type === 'password') values[field.key] = ''
     else values[field.key] = value ?? ''
   }
@@ -29,7 +30,8 @@ export default function ItemForm({ name, config, row, ctx, onClose, onSaved }) {
     if (needsTeam) api('/equipo').then(setTeam).catch(ctx.handleError)
   }, [needsTeam, ctx.handleError])
 
-  const update = (key) => (e) => setValues((v) => ({ ...v, [key]: e.target.value }))
+  const update = (key) => (e) =>
+    setValues((v) => ({ ...v, [key]: e.target.type === 'checkbox' ? e.target.checked : e.target.value }))
 
   const onSubmit = async (e) => {
     e.preventDefault()
@@ -118,6 +120,18 @@ export default function ItemForm({ name, config, row, ctx, onClose, onSaved }) {
                 ? 'Dejala vacía para no cambiarla.'
                 : 'Mínimo 8 caracteres. Pasásela a la persona por un medio privado.'
               : field.hint
+            // Casilla sí/no: el texto va al lado de la casilla.
+            if (field.type === 'checkbox') {
+              return (
+                <div key={field.key} className="pn-field pn-field--check">
+                  <label>
+                    <input type="checkbox" id={id} checked={values[field.key]} onChange={update(field.key)} />
+                    {field.label}
+                  </label>
+                  {hint && <small>{hint}</small>}
+                </div>
+              )
+            }
             // El campo de fotos y videos tiene varios controles: su título no apunta a uno solo.
             const Title = field.type === 'media' ? 'span' : 'label'
             return (

@@ -25,7 +25,7 @@ function Meta({ event }) {
 }
 
 // Cada evento: fotos y videos grandes de un lado y el texto del otro (los lados se van alternando).
-function EventShowcase({ event, index }) {
+export function EventShowcase({ event, index }) {
   const media = normalizeMedia(event.videos)
   const classes = ['showcase', index % 2 && 'showcase--flip', !media.length && 'showcase--text'].filter(Boolean)
   return (

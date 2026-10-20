@@ -20,7 +20,7 @@ export default function Commitment() {
               <RevealText text="impactan" start={2} mark />
             </h2>
             <p className="lead">
-              Al elegir a SYNCRA Argentina, tu marca o empresa impacta directamente en la agenda global de
+              Al elegir a SYNCRA Studios, tu marca o empresa impacta directamente en la agenda global de
               sustentabilidad a través de dos Objetivos de Desarrollo Sostenible (ODS).
             </p>
           </div>

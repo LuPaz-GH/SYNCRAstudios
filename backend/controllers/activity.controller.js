@@ -7,6 +7,9 @@ export async function getActivity(req, res) {
       userId: req.query.usuario,
       entity: req.query.seccion,
       action: req.query.accion,
+      search: req.query.buscar,
+      from: req.query.desde,
+      to: req.query.hasta,
       page: req.query.pagina,
     }),
   )

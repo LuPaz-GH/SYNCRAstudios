@@ -38,6 +38,9 @@ function clean(resource, body, partial) {
       case 'int':
         value = Number.parseInt(value, 10) || 0
         break
+      case 'bool':
+        value = value === true || value === 1 || value === '1' ? 1 : 0
+        break
       case 'user':
         value = value === '' || value == null ? null : Number.parseInt(value, 10) || null
         break

@@ -138,6 +138,29 @@
   min-height: 90px;
 }
 
+/* Casilla sí/no (ej. "Publicar en la web") */
+.pn-field--check {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+}
+
+.pn-field--check label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.pn-field--check input {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  accent-color: var(--yellow);
+  cursor: pointer;
+}
+
 .pn-field input:focus,
 .pn-field select:focus,
 .pn-field textarea:focus,
@@ -355,6 +378,10 @@
   color: var(--yellow);
 }
 
+a.pn-btn {
+  text-decoration: none;
+}
+
 .pn-btn--danger:hover {
   border-color: #ff7a7a;
   color: #ff9c9c;
@@ -376,6 +403,36 @@
 .pn-more {
   display: flex;
   margin: 24px auto 0;
+}
+
+/* Paginado de las listas: Anterior · Página 2 de 5 · Siguiente */
+.pn-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.pn-pager p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.pn-pager strong {
+  color: var(--white);
+}
+
+/* La flecha de "Anterior" apunta para el otro lado */
+.pn-pager .pn-btn:first-child svg {
+  transform: scaleX(-1);
+}
+
+@media (max-width: 520px) {
+  .pn-pager p span {
+    display: none;
+  }
 }
 
 .btn:disabled {
@@ -443,6 +500,55 @@
 .pn-select {
   width: auto;
   padding-block: 9px;
+}
+
+/* Filtro de fechas: Desde / Hasta */
+.pn-dates {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 0;
+  padding: 4px 6px 4px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+}
+
+.pn-dates legend {
+  float: left;
+  padding: 0;
+  color: var(--white);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.pn-dates label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--gray);
+  font-size: 0.85rem;
+}
+
+.pn-dates input {
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--white);
+  font: inherit;
+  color-scheme: dark;
+}
+
+.pn-dates input:focus {
+  outline: none;
+  border-color: var(--yellow);
+}
+
+.pn-dates .pn-icon-btn {
+  width: 34px;
+  height: 34px;
 }
 
 .pn-empty {
@@ -1059,6 +1165,7 @@
 
   .pn-item__actions {
     flex-direction: row;
+    flex-wrap: wrap;
   }
 
   .pn-log__item {

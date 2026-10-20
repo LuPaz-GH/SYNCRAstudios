@@ -24,6 +24,23 @@ await conn.query(`USE \`${dbName}\``)
 await conn.query(await readFile(new URL('../sql/schema.sql', import.meta.url), 'utf8'))
 console.log(`✔ Base "${dbName}" y tablas listas.`)
 
+// Columnas agregadas después de crear las tablas (las bases que ya existían no las tienen).
+const NEW_COLUMNS = [
+  ['messages', 'email', "VARCHAR(190) NOT NULL DEFAULT '' AFTER org"],
+  ['bookings', 'published', 'TINYINT(1) NOT NULL DEFAULT 0 AFTER notes'],
+  ['bookings', 'public_text', "VARCHAR(600) NOT NULL DEFAULT '' AFTER published"],
+  ['bookings', 'media', 'JSON NULL AFTER public_text'],
+]
+for (const [table, column, definition] of NEW_COLUMNS) {
+  const [[{ found }]] = await conn.query(
+    'SELECT COUNT(*) AS found FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = ?',
+    [dbName, table, column],
+  )
+  if (found) continue
+  await conn.query(`ALTER TABLE \`${table}\` ADD COLUMN \`${column}\` ${definition}`)
+  console.log(`✔ Se agregó la columna "${column}" a "${table}".`)
+}
+
 // Cargamos el evento que hoy está fijo en la web, para que no desaparezca.
 const [[{ total }]] = await conn.query('SELECT COUNT(*) AS total FROM events')
 if (total === 0) {

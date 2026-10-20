@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS messages (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(120) NOT NULL,
   org VARCHAR(160) NOT NULL DEFAULT '',
+  email VARCHAR(190) NOT NULL DEFAULT '',
   service VARCHAR(160) NOT NULL DEFAULT '',
   message TEXT NOT NULL,
   status ENUM('nuevo', 'en_curso', 'respondido') NOT NULL DEFAULT 'nuevo',
@@ -78,6 +79,10 @@ CREATE TABLE IF NOT EXISTS bookings (
   contact VARCHAR(200) NOT NULL DEFAULT '',
   assigned_to INT UNSIGNED NULL,
   notes TEXT NOT NULL,
+  -- Publicidad en la web ("Próximos eventos"): solo se muestran nombre, fecha, lugar, este texto y las fotos/videos.
+  published TINYINT(1) NOT NULL DEFAULT 0,
+  public_text VARCHAR(600) NOT NULL DEFAULT '',
+  media JSON NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by INT UNSIGNED NULL,

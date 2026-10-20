@@ -1,9 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Icon from '../../components/common/Icon'
 import { api } from '../../services/api'
-import { fullDate, when } from '../../utils/format'
+import { fullDate, localDay, when } from '../../utils/format'
 import ItemForm from '../../components/panel/ItemForm'
+import Pager from '../../components/panel/Pager'
+import DateRange from '../../components/panel/DateRange'
 import { exportToExcel } from '../../utils/exportExcel'
+
+const PAGE_SIZE = 20
 
 export default function ResourcePage({ name, config, ctx }) {
   const { isAdmin, notify, handleError } = ctx
@@ -12,6 +16,10 @@ export default function ResourcePage({ name, config, ctx }) {
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState('')
   const [editing, setEditing] = useState(null) // null = cerrado, {} = nuevo, fila = editar
+  const [page, setPage] = useState(1)
+  const [dates, setDates] = useState({ from: '', to: '' })
+  // Qué fecha usa el filtro Desde/Hasta: la de cada sección (ej. Agenda: el día del evento) o la de creación.
+  const dateFilter = config.dateFilter || { key: 'created_at', label: 'Creado' }
 
   const load = useCallback(() => {
     return api(`/${name}${trash ? '?papelera=1' : ''}`)
@@ -29,10 +37,26 @@ export default function ResourcePage({ name, config, ctx }) {
     const q = search.trim().toLowerCase()
     return rows.filter((r) => {
       if (filter && config.filter && r[config.filter.key] !== filter) return false
+      if (dates.from || dates.to) {
+        const day = localDay(r[dateFilter.key])
+        if (!day || (dates.from && day < dates.from) || (dates.to && day > dates.to)) return false
+      }
       if (!q) return true
       return [config.title(r), config.subtitle?.(r), config.body?.(r)].join(' ').toLowerCase().includes(q)
     })
-  }, [rows, search, filter, config])
+  }, [rows, search, filter, dates, dateFilter.key, config])
+
+  // Al buscar, filtrar o cambiar de pestaña se vuelve a la primera página.
+  useEffect(() => setPage(1), [search, filter, dates, trash, name])
+
+  // De a 20 por página. Si se borra lo último de una página, se muestra la anterior.
+  const pages = Math.max(1, Math.ceil(visible.length / PAGE_SIZE))
+  const current = Math.min(page, pages)
+  const pageRows = visible.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE)
+  const goTo = (n) => {
+    setPage(n)
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }
 
   const restore = async (row) => {
     try {
@@ -126,6 +150,7 @@ export default function ResourcePage({ name, config, ctx }) {
             ))}
           </select>
         )}
+        <DateRange value={dates} onChange={setDates} label={dateFilter.label} />
       </div>
 
       {rows === null ? (
@@ -140,10 +165,11 @@ export default function ResourcePage({ name, config, ctx }) {
         </p>
       ) : (
         <ul className="pn-list">
-          {visible.map((row) => {
+          {pageRows.map((row) => {
             const badge = config.badge?.(row)
             const body = config.body?.(row)
             const subtitle = config.subtitle?.(row)
+            const link = !trash && config.link?.(row)
             return (
               <li key={row.id} className="pn-item">
                 <div className="pn-item__main">
@@ -180,6 +206,11 @@ export default function ResourcePage({ name, config, ctx }) {
                     </button>
                   ) : (
                     <>
+                      {link && (
+                        <a className="pn-btn" href={link.href}>
+                          <Icon name={link.icon} size={18} /> {link.label}
+                        </a>
+                      )}
                       <button className="pn-btn" onClick={() => setEditing(row)}>
                         <Icon name="edit" size={18} /> Editar
                       </button>
@@ -196,6 +227,8 @@ export default function ResourcePage({ name, config, ctx }) {
           })}
         </ul>
       )}
+
+      <Pager page={current} pages={pages} total={visible.length} onChange={goTo} />
 
       {editing && (
         <ItemForm

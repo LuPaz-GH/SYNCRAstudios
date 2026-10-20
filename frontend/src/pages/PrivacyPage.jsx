@@ -1,5 +1,6 @@
 import SimplePage from '../components/layout/SimplePage'
 import { WHATSAPP_DISPLAY, whatsappLink } from '../utils/whatsapp'
+import { CONTACT_EMAIL } from '../utils/contact'
 
 // Política de privacidad (Ley 25.326 de Protección de los Datos Personales, Argentina).
 // BORRADOR: tiene que revisarlo SYNCRA (y, idealmente, un/a abogado/a) antes de darlo por final.
@@ -7,9 +8,12 @@ const UPDATED = 'octubre de 2026'
 
 export default function PrivacyPage() {
   const contact = (
-    <a href={whatsappLink('Hola SYNCRA, quiero hacer una consulta sobre mis datos personales.')} target="_blank" rel="noopener noreferrer">
-      WhatsApp {WHATSAPP_DISPLAY}
-    </a>
+    <>
+      <a href={whatsappLink('Hola SYNCRA, quiero hacer una consulta sobre mis datos personales.')} target="_blank" rel="noopener noreferrer">
+        WhatsApp {WHATSAPP_DISPLAY}
+      </a>{' '}
+      o por email a <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+    </>
   )
 
   return (
@@ -34,8 +38,8 @@ export default function PrivacyPage() {
         <h2>2. Qué datos recopilamos</h2>
         <ul>
           <li>
-            <strong>Formulario de contacto:</strong> tu nombre, tu empresa o institución (si la completás), el servicio
-            que te interesa y el mensaje que nos escribís.
+            <strong>Formulario de contacto:</strong> tu nombre, tu empresa o institución y tu email (si los
+            completás), el servicio que te interesa y el mensaje que nos escribís.
           </li>
           <li>
             <strong>WhatsApp:</strong> si seguís la conversación por WhatsApp, ese intercambio también se rige por la

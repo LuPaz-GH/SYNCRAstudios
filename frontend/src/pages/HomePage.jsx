@@ -9,6 +9,7 @@ import Marquee from '../components/home/Marquee'
 import Manifesto from '../components/home/Manifesto'
 import About from '../components/home/About'
 import Live from '../components/home/Live'
+import Upcoming from '../components/home/Upcoming'
 import Events from '../components/home/Events'
 import Post from '../components/home/Post'
 import Values from '../components/home/Values'
@@ -37,6 +38,7 @@ export default function HomePage() {
         </div>
         <About />
         <Live />
+        <Upcoming />
         <Events />
         <Post />
         <Values />

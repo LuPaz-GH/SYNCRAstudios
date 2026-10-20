@@ -3,6 +3,7 @@ import Icon from '../common/Icon'
 import RevealText from '../common/RevealText'
 import { sendContactMessage } from '../../services/public.service'
 import { WHATSAPP_DISPLAY, WHATSAPP_PHONE, whatsappLink } from '../../utils/whatsapp'
+import { CONTACT_EMAIL, INSTAGRAM } from '../../utils/contact'
 
 const SERVICES = [
   'Subtitulado en vivo (evento presencial)',
@@ -18,7 +19,7 @@ const SERVICES = [
 // El formulario arma el mensaje y abre una conversación de WhatsApp.
 // Además guarda la consulta para que el equipo la vea en el panel (sección Mensajes).
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', org: '', service: SERVICES[0], message: '' })
+  const [form, setForm] = useState({ name: '', org: '', email: '', service: SERVICES[0], message: '' })
 
   const update = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }))
 
@@ -29,6 +30,7 @@ export default function Contact() {
       `Hola SYNCRA, soy ${form.name}${form.org ? ` de ${form.org}` : ''}.`,
       `Me interesa: ${form.service}.`,
       form.message,
+      form.email && `Mi email: ${form.email}`,
     ]
       .filter(Boolean)
       .join('\n')
@@ -57,19 +59,23 @@ export default function Contact() {
               </div>
             </li>
             <li>
-              <Icon name="globe" />
+              <Icon name="mail" />
               <div>
-                <span>Web oficial</span>
-                <a href="https://www.syncra.com" target="_blank" rel="noreferrer">
-                  www.syncra.com
+                <span>Email</span>
+                <a href={`mailto:${CONTACT_EMAIL}`} className="contact__email">
+                  {/* <wbr> permite cortarlo después de la @ si no entra en una línea */}
+                  {CONTACT_EMAIL.split('@')[0]}@<wbr />
+                  {CONTACT_EMAIL.split('@')[1]}
                 </a>
               </div>
             </li>
             <li>
-              <Icon name="at" />
+              <Icon name="instagram" />
               <div>
-                <span>Redes sociales</span>
-                <strong>@syncra</strong>
+                <span>Instagram</span>
+                <a href={INSTAGRAM.url} target="_blank" rel="noopener noreferrer">
+                  {INSTAGRAM.user}
+                </a>
               </div>
             </li>
           </ul>
@@ -86,6 +92,10 @@ export default function Contact() {
               <input value={form.org} onChange={update('org')} autoComplete="organization" />
             </label>
           </div>
+          <label>
+            Email <em>(opcional, para responderte por correo)</em>
+            <input type="email" value={form.email} onChange={update('email')} autoComplete="email" maxLength={190} />
+          </label>
           <label>
             ¿Qué necesitás?
             <select value={form.service} onChange={update('service')}>

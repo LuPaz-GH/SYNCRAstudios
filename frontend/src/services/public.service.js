@@ -16,3 +16,17 @@ export function sendContactMessage(form) {
     keepalive: true,
   })
 }
+
+// Próximos eventos de la Agenda que el equipo marcó "Publicar en la web".
+// Se piden una sola vez: los usan la sección "Próximos eventos" y el link "Agenda" del menú.
+let upcoming = null
+export function getUpcomingEvents() {
+  upcoming ??= fetch('/api/public/proximos').then((res) => {
+    if (!res.ok) throw new Error('No se pudieron cargar los próximos eventos.')
+    return res.json()
+  })
+  upcoming.catch(() => {
+    upcoming = null // si falló, la próxima vez se vuelve a intentar
+  })
+  return upcoming
+}

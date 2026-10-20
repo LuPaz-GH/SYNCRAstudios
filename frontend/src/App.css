@@ -2245,6 +2245,15 @@
   color: var(--yellow);
 }
 
+/* El email es largo: en pantallas chicas se corta en dos líneas en vez de salirse */
+.contact__list div {
+  min-width: 0;
+}
+
+.contact__email {
+  overflow-wrap: break-word;
+}
+
 .form {
   display: grid;
   gap: 18px;

@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
+import Icon from '../../components/common/Icon'
 import ActivityList from '../../components/panel/ActivityList'
+import DateRange from '../../components/panel/DateRange'
 import { api } from '../../services/api'
+import { dayRangeToUtc } from '../../utils/format'
 import { ACTION_LABELS, ENTITY_LABELS } from '../../utils/panelConfig'
 
 export default function ActivityPage({ ctx }) {
@@ -10,14 +13,23 @@ export default function ActivityPage({ ctx }) {
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(false)
   const [team, setTeam] = useState([])
+  const [dates, setDates] = useState({ from: '', to: '' })
+  const [search, setSearch] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     if (isAdmin) api('/equipo').then(setTeam).catch(handleError)
   }, [isAdmin, handleError])
 
+  // El buscador pregunta al servidor cuando se deja de escribir (no con cada letra).
+  useEffect(() => {
+    const timer = setTimeout(() => setSearchQuery(search.trim()), 400)
+    return () => clearTimeout(timer)
+  }, [search])
+
   const load = useCallback(
     (pageToLoad) => {
-      const params = new URLSearchParams({ ...filters, pagina: pageToLoad })
+      const params = new URLSearchParams({ ...filters, ...dayRangeToUtc(dates), buscar: searchQuery, pagina: pageToLoad })
       return api(`/actividad?${params}`)
         .then((data) => {
           setEntries((prev) => (pageToLoad === 1 ? data.rows : [...(prev || []), ...data.rows]))
@@ -26,7 +38,7 @@ export default function ActivityPage({ ctx }) {
         })
         .catch(handleError)
     },
-    [filters, handleError],
+    [filters, dates, searchQuery, handleError],
   )
 
   useEffect(() => {
@@ -49,6 +61,16 @@ export default function ActivityPage({ ctx }) {
       </header>
 
       <div className="pn-toolbar">
+        <label className="pn-search">
+          <Icon name="search" size={18} />
+          <input
+            type="search"
+            placeholder="Buscar…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            aria-label="Buscar en la actividad"
+          />
+        </label>
         {isAdmin && (
           <select className="pn-select" value={filters.usuario} onChange={setFilter('usuario')} aria-label="Filtrar por persona">
             <option value="">Todas las personas</option>
@@ -77,6 +99,7 @@ export default function ActivityPage({ ctx }) {
             </option>
           ))}
         </select>
+        <DateRange value={dates} onChange={setDates} />
       </div>
 
       {entries === null ? (

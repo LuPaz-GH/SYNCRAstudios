@@ -1,11 +1,12 @@
 import Icon from '../common/Icon'
 import Logo from '../common/Logo'
+import { INSTAGRAM } from '../../utils/contact'
 
 const PETALS = ['#8e44ad', '#e84393', '#f5b800', '#27ae60', '#3498db']
 
 // Redes de SYNCRA. Una red sin link no se muestra: para que aparezca, completá su "url".
 const SOCIALS = [
-  { name: 'Instagram', icon: 'instagram', url: 'https://www.instagram.com/syncra_studios/', text: '@syncra_studios' },
+  { name: 'Instagram', icon: 'instagram', url: INSTAGRAM.url, text: INSTAGRAM.user },
   { name: 'LinkedIn', icon: 'linkedin', url: '', text: 'LinkedIn' }, // ej.: 'https://www.linkedin.com/company/syncra-studios/'
 ].filter((social) => social.url)
 

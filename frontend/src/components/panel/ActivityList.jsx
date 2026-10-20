@@ -19,8 +19,9 @@ function mediaSummary(list) {
 const VALUE_LABELS = { status: { ...MESSAGE_STATUS, ...TASK_STATUS, ...BOOKING_STATUS }, role: ROLES, modality: MODALITY }
 
 function showValue(key, value) {
+  if (key === 'published') return value ? 'Sí' : 'No'
   if (value === null || value === undefined || value === '') return '(vacío)'
-  if (key === 'videos' && Array.isArray(value)) return mediaSummary(value)
+  if ((key === 'videos' || key === 'media') && Array.isArray(value)) return mediaSummary(value)
   if (VALUE_LABELS[key]?.[value]) return VALUE_LABELS[key][value]
   return String(value)
 }

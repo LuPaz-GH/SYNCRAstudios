@@ -22,6 +22,8 @@ function readable(field, row) {
       return dayDate(value)
     case 'time':
       return value ? value.slice(0, 5) : ''
+    case 'checkbox':
+      return value ? 'Sí' : 'No'
     case 'media':
       return (value || []).map((v) => [v.label, v.src].filter(Boolean).join(': ')).join(', ')
     default:

@@ -231,7 +231,7 @@ Corré `npm run db:setup` una vez apuntando a esa base.
 
 ## 📬 Contacto
 
-📞 **+54 9 381 448-0873** · 🌐 **www.syncra.com** · 📸 **@syncra**
+📞 **+54 9 381 641-0228** · ✉️ **syncrastudiosargentina26@gmail.com** · 📸 **@syncra_studios**
 
 ---
 

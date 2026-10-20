@@ -1,5 +1,5 @@
 // Qué se puede gestionar desde el panel y qué campos tiene cada cosa.
-// Tipos: text (texto corto), long (texto largo), int, date, json, enum, user (id de un usuario),
+// Tipos: text (texto corto), long (texto largo), int, bool (sí/no), date, json, enum, user (id de un usuario),
 // media (fotos, videos y links de Instagram: ver utils/media.js).
 export const RESOURCES = {
   eventos: {
@@ -25,6 +25,7 @@ export const RESOURCES = {
     fields: {
       name: { type: 'text', max: 120, required: true },
       org: { type: 'text', max: 160 },
+      email: { type: 'text', max: 190 },
       service: { type: 'text', max: 160 },
       message: { type: 'long', required: true },
       status: { type: 'enum', values: ['nuevo', 'en_curso', 'respondido'] },
@@ -51,6 +52,9 @@ export const RESOURCES = {
       contact: { type: 'text', max: 200 },
       assigned_to: { type: 'user' },
       notes: { type: 'long' },
+      published: { type: 'bool' },
+      public_text: { type: 'text', max: 600 },
+      media: { type: 'media' },
     },
   },
   tareas: {

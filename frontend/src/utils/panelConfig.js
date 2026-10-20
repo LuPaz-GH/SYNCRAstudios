@@ -21,14 +21,23 @@ export const RESOURCES = {
     newLabel: 'Nuevo mensaje',
     intro: 'Consultas que llegan desde el formulario de contacto de la web.',
     title: (r) => r.name,
-    subtitle: (r) => [r.org, r.service].filter(Boolean).join(' · '),
+    subtitle: (r) => [r.org, r.email, r.service].filter(Boolean).join(' · '),
     body: (r) => r.message,
+    // Botón extra en cada fila: si dejó su email, se le responde desde el programa de correo.
+    link: (r) =>
+      r.email && {
+        href: `mailto:${r.email}?subject=${encodeURIComponent('Tu consulta a SYNCRA Studios')}`,
+        label: 'Responder por email',
+        icon: 'mail',
+      },
     badge: (r) => ({ text: MESSAGE_STATUS[r.status], tone: r.status }),
     filter: { key: 'status', label: 'Estado', options: options(MESSAGE_STATUS) },
+    dateFilter: { key: 'created_at', label: 'Recibido' },
     defaults: { status: 'nuevo' },
     fields: [
       { key: 'name', label: 'Nombre', required: true },
       { key: 'org', label: 'Empresa o institución' },
+      { key: 'email', label: 'Email', type: 'email' },
       { key: 'service', label: 'Servicio que le interesa' },
       { key: 'message', label: 'Mensaje', type: 'textarea', required: true },
       { key: 'status', label: 'Estado', type: 'select', options: options(MESSAGE_STATUS) },
@@ -47,6 +56,7 @@ export const RESOURCES = {
         longDay(r.date) + (r.start_time ? ` · ${r.start_time.slice(0, 5)} h` : ''),
         r.place,
         MODALITY[r.modality],
+        r.published && '🌐 Publicado en la web',
       ]
         .filter(Boolean)
         .join(' · '),
@@ -62,6 +72,7 @@ export const RESOURCES = {
         .join('\n'),
     badge: (r) => ({ text: BOOKING_STATUS[r.status], tone: r.status }),
     filter: { key: 'status', label: 'Estado', options: options(BOOKING_STATUS) },
+    dateFilter: { key: 'date', label: 'Fecha del evento' },
     defaults: { status: 'confirmado', modality: 'presencial' },
     fields: [
       { key: 'event_name', label: 'Evento', required: true, hint: 'Ej.: Congreso Nacional de Cardiología' },
@@ -75,6 +86,25 @@ export const RESOURCES = {
       { key: 'contact', label: 'Contacto del cliente', hint: 'Nombre, teléfono o email de quien coordina.' },
       { key: 'assigned_to', label: 'Responsable de SYNCRA', type: 'user' },
       { key: 'notes', label: 'Notas', type: 'textarea' },
+      // Publicidad: si se marca, aparece en "Próximos eventos" de la web (sin cliente, contacto, notas ni responsable).
+      {
+        key: 'published',
+        label: 'Publicar en la web',
+        type: 'checkbox',
+        hint: 'Aparece en "Próximos eventos" con el nombre, la fecha, el lugar, el texto y las fotos/videos de abajo. Los datos del cliente y las notas nunca se muestran.',
+      },
+      {
+        key: 'public_text',
+        label: 'Texto para la web',
+        type: 'textarea',
+        hint: 'Lo que va a leer el público. Ej.: "Vamos a estar subtitulando en vivo todas las charlas. ¡Te esperamos!"',
+      },
+      {
+        key: 'media',
+        label: 'Fotos y videos para la web',
+        type: 'media',
+        hint: 'Por ejemplo, el flyer del evento. Subí archivos o pegá links de Instagram.',
+      },
     ],
   },
   eventos: {

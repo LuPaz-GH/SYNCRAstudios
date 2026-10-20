@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import Logo from '../common/Logo'
+import { getUpcomingEvents } from '../../services/public.service'
 
 const LINKS = [
   { href: '#nosotros', label: 'Nosotros' },
   { href: '#en-vivo', label: 'En vivo' },
+  { href: '#proximos', label: 'Agenda', onlyWithUpcoming: true },
   { href: '#eventos', label: 'Eventos' },
   { href: '#posproduccion', label: 'Posproducción' },
   { href: '#compromiso', label: 'Compromiso' },
@@ -13,6 +15,14 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const progressRef = useRef(null)
+  // "Agenda" aparece solo si hay próximos eventos publicados (si no, llevaría a una sección vacía).
+  const [hasUpcoming, setHasUpcoming] = useState(false)
+
+  useEffect(() => {
+    getUpcomingEvents()
+      .then((rows) => setHasUpcoming(Array.isArray(rows) && rows.length > 0))
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     let frame = 0
@@ -54,7 +64,7 @@ export default function Navbar() {
         </a>
 
         <nav id="menu" className="nav__menu" aria-label="Principal">
-          {LINKS.map((link) => (
+          {LINKS.filter((link) => hasUpcoming || !link.onlyWithUpcoming).map((link) => (
             <a key={link.href} href={link.href} onClick={close}>
               {link.label}
             </a>

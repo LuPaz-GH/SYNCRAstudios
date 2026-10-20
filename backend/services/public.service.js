@@ -10,14 +10,30 @@ export function listEvents() {
   )
 }
 
+// Próximos eventos de la Agenda marcados "Publicar en la web".
+// Solo datos públicos: nunca cliente, contacto, notas ni responsable. Desde hoy (hora argentina), sin cancelados.
+export function listUpcoming() {
+  return query(
+    `SELECT id, event_name AS name, date, start_time, place, modality, public_text AS text, media
+     FROM bookings
+     WHERE deleted_at IS NULL AND published = 1 AND status <> 'cancelado'
+       AND date >= DATE(UTC_TIMESTAMP() - INTERVAL 3 HOUR)
+     ORDER BY date ASC, start_time ASC`,
+  )
+}
+
 export async function saveContactMessage(body) {
   const name = String(body.name || '').trim().slice(0, 120)
   if (!name) throw new HttpError(400, 'Falta el nombre.')
+
+  // Email opcional, para poder responder por correo. Si no tiene forma de email, se descarta.
+  const email = String(body.email || '').trim().toLowerCase().slice(0, 190)
 
   const result = await query('INSERT INTO messages SET ?', [
     {
       name,
       org: String(body.org || '').trim().slice(0, 160),
+      email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : '',
       service: String(body.service || '').trim().slice(0, 160),
       message: String(body.message || '').trim().slice(0, 5000),
       notes: '',
