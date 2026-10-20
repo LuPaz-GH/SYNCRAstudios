@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Icon from '../../components/common/Icon'
 import Logo from '../../components/common/Logo'
+import PasswordInput from '../../components/panel/PasswordInput'
 import { api } from '../../services/api'
 import { whatsappLink } from '../../utils/whatsapp'
 
@@ -38,16 +39,16 @@ export default function LoginPage({ onLogin }) {
           <span>Email</span>
           <input type="email" required autoComplete="username" value={form.email} onChange={update('email')} autoFocus />
         </label>
-        <label className="pn-field">
-          <span>Contraseña</span>
-          <input
-            type="password"
+        <div className="pn-field">
+          <label htmlFor="login-password">Contraseña</label>
+          <PasswordInput
+            id="login-password"
             required
             autoComplete="current-password"
             value={form.password}
             onChange={update('password')}
           />
-        </label>
+        </div>
 
         <button
           type="button"

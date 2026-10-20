@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Icon from '../common/Icon'
 import MediaField from './MediaField'
+import PasswordInput from './PasswordInput'
 import { api } from '../../services/api'
 import { normalizeMedia } from '../../utils/media'
 
@@ -105,15 +106,10 @@ export default function ItemForm({ name, config, row, ctx, onClose, onSaved }) {
                   ))}
                 </select>
               )
+            } else if (isPassword) {
+              input = <PasswordInput {...common} minLength={8} autoComplete="new-password" />
             } else {
-              input = (
-                <input
-                  type={field.type || 'text'}
-                  {...common}
-                  minLength={isPassword ? 8 : undefined}
-                  autoComplete={isPassword ? 'new-password' : 'off'}
-                />
-              )
+              input = <input type={field.type || 'text'} {...common} autoComplete="off" />
             }
             const hint = isPassword
               ? row

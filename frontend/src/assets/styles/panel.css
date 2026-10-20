@@ -138,6 +138,43 @@
   min-height: 90px;
 }
 
+/* Contraseña con el ojito para mostrarla u ocultarla */
+.pn-password {
+  position: relative;
+}
+
+.pn-field .pn-password input {
+  padding-right: 52px;
+}
+
+.pn-password__toggle {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--gray);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: color 0.2s, background 0.2s;
+}
+
+.pn-password__toggle:hover,
+.pn-password__toggle:focus-visible {
+  background: var(--surface-2);
+  color: var(--yellow);
+}
+
+.pn-password__toggle:focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: 1px;
+}
+
 /* Casilla sí/no (ej. "Publicar en la web") */
 .pn-field--check {
   padding: 14px;
